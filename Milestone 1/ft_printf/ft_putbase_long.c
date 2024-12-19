@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putbase_long.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ecarbona <ecarbona@student.42firenze.it    +#+  +:+       +#+        */
+/*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/26 18:08:37 by ecarbona          #+#    #+#             */
-/*   Updated: 2024/11/27 23:53:02 by ecarbona         ###   ########.fr       */
+/*   Created: 2024/12/19 14:51:37 by tolanini          #+#    #+#             */
+/*   Updated: 2024/12/19 14:51:41 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

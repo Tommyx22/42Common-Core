@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstmap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ecarbona <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 11:37:49 by ecarbona          #+#    #+#             */
-/*   Updated: 2024/11/25 13:35:50 by ecarbona         ###   ########.fr       */
+/*   Created: 2024/11/22 16:07:58 by tolanini          #+#    #+#             */
+/*   Updated: 2024/11/25 15:19:14 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
-	t_list	*head;
 	t_list	*temp;
+	t_list	*head;
 
 	head = NULL;
 	while (lst)
@@ -27,7 +27,7 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 			return (NULL);
 		}
 		ft_lstadd_back(&head, temp);
-		lst = lst -> next;
+		lst = lst->next;
 	}
 	return (head);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_tolower.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ecarbona <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/17 18:04:54 by ecarbona          #+#    #+#             */
-/*   Updated: 2024/11/24 16:18:01 by ecarbona         ###   ########.fr       */
+/*   Created: 2024/11/19 14:58:12 by tolanini          #+#    #+#             */
+/*   Updated: 2024/11/25 15:23:59 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,10 @@
 
 int	ft_tolower(int c)
 {
-	if (c >= 'A' && c <= 'Z')
+	if (c >= 65 && c <= 90)
+	{
 		return (c + 32);
+	}
 	return (c);
 }
 // #include <stdio.h>

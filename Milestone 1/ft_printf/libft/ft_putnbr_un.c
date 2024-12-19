@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putnbr_un.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ecarbona <ecarbona@student.42firenze.it    +#+  +:+       +#+        */
+/*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/26 16:21:45 by ecarbona          #+#    #+#             */
-/*   Updated: 2024/11/28 00:31:50 by ecarbona         ###   ########.fr       */
+/*   Created: 2024/12/19 14:52:22 by tolanini          #+#    #+#             */
+/*   Updated: 2024/12/19 14:52:28 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ecarbona <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/17 18:12:57 by ecarbona          #+#    #+#             */
-/*   Updated: 2024/11/23 16:10:17 by ecarbona         ###   ########.fr       */
+/*   Created: 2024/11/19 15:01:01 by tolanini          #+#    #+#             */
+/*   Updated: 2024/11/25 15:21:42 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*ft_strchr(const char *str, int c)
 {
-	int	i;
+	int		i;
 
 	i = 0;
 	while (str[i] != '\0')

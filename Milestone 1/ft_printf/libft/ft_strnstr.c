@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ecarbona <ecarbona@student.42firenze.it    +#+  +:+       +#+        */
+/*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/14 16:20:25 by ecarbona          #+#    #+#             */
-/*   Updated: 2024/11/24 21:51:46 by ecarbona         ###   ########.fr       */
+/*   Created: 2024/11/19 17:13:39 by tolanini          #+#    #+#             */
+/*   Updated: 2024/11/25 15:23:21 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,29 @@
 char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
 	size_t	i;
-	size_t	c;
+	size_t	j;
 
 	i = 0;
-	if (*little == 0)
+	j = 0;
+	if (*little == '\0')
 		return ((char *)big);
-	if (len == 0)
-		return (NULL);
-	while (big[i] != '\0' && i <= len)
+	while (i < len && big[i] != '\0')
 	{
-		c = 0;
-		while (big[i + c] == little[c] && big[i + c] != '\0' && i + c < len)
-			c++;
-		if (little[c] == '\0')
-			return ((char *)&big[i]);
+		if (big[i] == little[0])
+		{
+			j = 0;
+			while (little[j] != '\0' && i + j < len)
+			{
+				if (big[i + j] != little[j])
+					break ;
+				j++;
+			}
+			if (little[j] == '\0')
+				return ((char *)(big + i));
+		}
 		i++;
 	}
-	return (NULL);
+	return (0);
 }
 // #include <stdio.h>
 // int     main()

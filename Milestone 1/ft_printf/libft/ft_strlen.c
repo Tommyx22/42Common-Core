@@ -3,22 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ecarbona <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/14 16:40:44 by ecarbona          #+#    #+#             */
-/*   Updated: 2024/11/19 10:47:14 by ecarbona         ###   ########.fr       */
+/*   Created: 2024/11/18 12:19:09 by tolanini          #+#    #+#             */
+/*   Updated: 2024/11/22 13:50:24 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string.h>
 #include "libft.h"
 
 size_t	ft_strlen(const char *s)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (s[i] != '\0')
+	{
 		i++;
+	}
 	return (i);
 }

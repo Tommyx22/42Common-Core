@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ecarbona <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/21 12:43:03 by ecarbona          #+#    #+#             */
-/*   Updated: 2024/11/21 17:56:22 by ecarbona         ###   ########.fr       */
+/*   Created: 2024/11/22 15:27:17 by tolanini          #+#    #+#             */
+/*   Updated: 2024/11/22 16:31:13 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 t_list	*ft_lstnew(void *content)
 {
-	t_list	*nodo;
+	t_list	*node;
 
-	nodo = (t_list *)malloc(sizeof(t_list));
-	if (!nodo)
+	node = (t_list *)malloc(sizeof(t_list));
+	if (node == NULL)
 		return (NULL);
-	nodo->content = content;
-	nodo->next = NULL;
-	return (nodo);
+	node->content = content;
+	node->next = NULL;
+	return (node);
 }

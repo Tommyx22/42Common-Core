@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ecarbona <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/17 18:45:39 by ecarbona          #+#    #+#             */
-/*   Updated: 2024/11/22 13:45:53 by ecarbona         ###   ########.fr       */
+/*   Created: 2024/11/19 17:38:53 by tolanini          #+#    #+#             */
+/*   Updated: 2024/11/25 15:16:01 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,27 @@
 
 int	ft_atoi(const char *nptr)
 {
+	int	nbr;
 	int	i;
-	int	atoi;
-	int	min;
+	int	tot;
 
 	i = 0;
-	atoi = 0;
-	min = 1;
+	tot = 0;
+	nbr = 1;
 	while ((nptr[i] >= 9 && nptr[i] <= 13) || nptr[i] == 32)
 		i++;
-	if (nptr[i] == '+' || nptr[i] == '-')
+	if (nptr[i] == '-' || nptr[i] == '+')
 	{
 		if (nptr[i] == '-')
-		{
-			min = -min;
-		}
+			nbr = -nbr;
 		i++;
 	}
 	while (nptr[i] >= '0' && nptr[i] <= '9')
 	{
-		atoi = ((atoi * 10) + (nptr[i] - 48));
+		tot = (tot * 10) + (nptr[i] - '0');
 		i++;
 	}
-	return (atoi * min);
+	return (nbr * tot);
 }
 // #include <stdlib.h>
 // #include <stdio.h>

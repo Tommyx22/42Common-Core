@@ -3,14 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ecarbona <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/17 16:23:29 by ecarbona          #+#    #+#             */
-/*   Updated: 2024/11/24 16:25:01 by ecarbona         ###   ########.fr       */
+/*   Created: 2024/11/18 15:43:29 by tolanini          #+#    #+#             */
+/*   Updated: 2024/11/25 15:15:41 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string.h>
 #include "libft.h"
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)
