@@ -28,7 +28,7 @@ static int	ft_read(int fd, char **str, char *buffer)
 	if (bytes_read == 0)
 		return (bytes_read);
 	tmp = ft_strjoin(*str, buffer);
-	if(tmp == NULL)
+	if (tmp == NULL)
 		return (-1);
 	free (*str);
 	*str = tmp;
