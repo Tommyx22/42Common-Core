@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 18:48:36 by tolanini          #+#    #+#             */
-/*   Updated: 2025/01/02 15:20:27 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/01/06 15:14:25 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ static int	ft_read(int fd, char **str, char *buffer)
 	if (bytes_read == 0)
 		return (bytes_read);
 	tmp = ft_strjoin(*str, buffer);
+	if(tmp == NULL)
+		return (-1);
 	free (*str);
 	*str = tmp;
 	return (bytes_read);
@@ -92,6 +94,8 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buffer = (char *)malloc(BUFFER_SIZE + 1);
+	if (!buffer)
+		return (NULL);
 	bytes_read = 1;
 	while (ft_strchr(string, '\n') == NULL && bytes_read > 0)
 		bytes_read = ft_read(fd, &string, buffer);

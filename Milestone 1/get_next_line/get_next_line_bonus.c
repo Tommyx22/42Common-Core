@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 18:48:36 by tolanini          #+#    #+#             */
-/*   Updated: 2025/01/02 15:19:48 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/01/06 15:15:34 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ static int	ft_read(int fd, char **str, char *buffer)
 	if (bytes_read == 0)
 		return (bytes_read);
 	tmp = ft_strjoin(*str, buffer);
+	if (!tmp)
+		return (-1);
 	free (*str);
 	*str = tmp;
 	return (bytes_read);
