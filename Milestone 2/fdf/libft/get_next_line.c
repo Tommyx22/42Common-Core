@@ -5,114 +5,84 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/01 18:48:36 by tolanini          #+#    #+#             */
-/*   Updated: 2025/02/17 17:24:50 by tolanini         ###   ########.fr       */
+/*   Created: 2025/02/17 17:33:59 by tolanini          #+#    #+#             */
+/*   Updated: 2025/02/17 18:12:06 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	ft_read(int fd, char **str, char *buffer)
-{
-	int		bytes_read;
-	char	*tmp;
-
-	ft_bzero(buffer, BUFFER_SIZE + 1);
-	bytes_read = read(fd, buffer, BUFFER_SIZE);
-	if (bytes_read < 0 || buffer == NULL)
-	{
-		free(*str);
-		*str = NULL;
-		return (-1);
-	}
-	if (bytes_read == 0)
-		return (bytes_read);
-	tmp = ft_strjoin(*str, buffer);
-	free (*str);
-	*str = tmp;
-	return (bytes_read);
-}
-
-static void	get_result(char **str, char **result)
-{
-	size_t	i;
-	size_t	len;
-	char	*diff;
-
-	diff = ft_strchr(*str, '\n');
-	len = ft_strlen(*str) - ft_strlen(diff) + 2;
-	*result = malloc(len);
-	if (!result)
-		return ;
-	i = 0;
-	while (i < len - 1)
-	{
-		(*result)[i] = (*str)[i];
-		i++;
-	}
-	(*result)[i] = '\0';
-}
-
-static void	del_string(char **str)
-{
-	char	*tmp;
-	size_t	i;
-	size_t	j;
-
-	if (!ft_strchr(*str, '\n'))
-	{
-		free(*str);
-		*str = NULL;
-		return ;
-	}
-	tmp = malloc((ft_strlen(ft_strchr(*str, '\n'))) * sizeof(char));
-	if (!tmp)
-		return ;
-	i = 0;
-	j = ft_strlen(*str) - ft_strlen(ft_strchr(*str, '\n')) + 1;
-	while (j < ft_strlen(*str))
-		tmp[i++] = (*str)[j++];
-	tmp[i] = '\0';
-	free(*str);
-	*str = tmp;
-	if (**str == 0)
-	{
-		free(*str);
-		*str = NULL;
-	}
-}
+ssize_t	read_file(int fd, char **buffer, char **buff_read, char **line);
+char	*get_line(char **buff_read, char **line);
 
 char	*get_next_line(int fd)
 {
-	static char	*string;
-	char		*result;
-	char		*buffer;
-	int			bytes_read;
+	static char		*buff_read[OPEN_MAX];
+	char			*buffer;
+	char			*line;
+	ssize_t			n;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd > OPEN_MAX)
 		return (NULL);
-	buffer = (char *)malloc(BUFFER_SIZE + 1);
-	bytes_read = 1;
-	while (ft_strchr(string, '\n') == NULL && bytes_read > 0)
-		bytes_read = ft_read(fd, &string, buffer);
-	free(buffer);
-	if (bytes_read == -1)
+	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buffer)
 		return (NULL);
-	if (ft_strlen(string) == 0)
+	if (read(fd, buffer, 0) < 0)
+	{
+		free(buffer);
 		return (NULL);
-	get_result(&string, &result);
-	del_string(&string);
-	return (result);
+	}
+	if (!buff_read[fd])
+		buff_read[fd] = ft_strdup("");
+	n = read_file(fd, &buffer, &buff_read[fd], &line);
+	if (n == 0 && !line)
+		return (NULL);
+	return (line);
 }
 
-// int main()
-// {
-// 	int	fd = open("filefd.txt", O_RDONLY);
-// 	char *line;
-// 	line = get_next_line(fd);
-// 	printf("%d\n", fd);
-// 	printf("%s\n", line);
-// 	free (line);
-// 	close (fd);
-// 	return (0);
-// }
+ssize_t	read_file(int fd, char **buffer, char **buff_read, char **line)
+{
+	char	*temp;
+	ssize_t	n;
+
+	n = 1;
+	while (!ft_strchr(*buff_read, '\n') && n)
+	{
+		n = read(fd, *buffer, BUFFER_SIZE);
+		(*buffer)[n] = '\0';
+		temp = *buff_read;
+		*buff_read = ft_strjoin(temp, *buffer);
+		free(temp);
+	}
+	free(*buffer);
+	*buffer = NULL;
+	*buff_read = get_line(buff_read, line);
+	if (**line == '\0')
+	{
+		free(*line);
+		*line = NULL;
+	}
+	return (n);
+}
+
+char	*get_line(char **buff_read, char **line)
+{
+	size_t	i;
+	char	*new_buff;
+
+	i = 0;
+	new_buff = NULL;
+	while ((*(*buff_read + i) != '\n') && (*(*buff_read + i) != '\0'))
+		i++;
+	if (*(*buff_read + i) == '\n')
+	{
+		i++;
+		*line = ft_substr(*buff_read, 0, i);
+		new_buff = ft_strdup(*buff_read + i);
+	}
+	else
+		*line = ft_strdup(*buff_read);
+	free(*buff_read);
+	*buff_read = NULL;
+	return (new_buff);
+}

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/19 17:13:39 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 15:23:21 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/14 16:20:25 by tolanini          #+#    #+#             */
+/*   Updated: 2025/02/17 18:12:06 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,34 +15,28 @@
 char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
 	size_t	i;
-	size_t	j;
+	size_t	c;
 
 	i = 0;
-	j = 0;
-	if (*little == '\0')
+	if (*little == 0)
 		return ((char *)big);
-	while (i < len && big[i] != '\0')
+	if (len == 0)
+		return (NULL);
+	while (big[i] != '\0' && i <= len)
 	{
-		if (big[i] == little[0])
-		{
-			j = 0;
-			while (little[j] != '\0' && i + j < len)
-			{
-				if (big[i + j] != little[j])
-					break ;
-				j++;
-			}
-			if (little[j] == '\0')
-				return ((char *)(big + i));
-		}
+		c = 0;
+		while (big[i + c] == little[c] && big[i + c] != '\0' && i + c < len)
+			c++;
+		if (little[c] == '\0')
+			return ((char *)&big[i]);
 		i++;
 	}
-	return (0);
+	return (NULL);
 }
 // #include <stdio.h>
 // int     main()
 // {
-// 	char    str[] = "oh no not the empty string !";
-// 	char    find[] = "";
-// 	printf("%s", ft_strnstr(str, find, 0));
+// 	char    str[] = "eliminaCOPIAelimina";
+// 	//char    find[] = "PIA";
+// 	printf("%s", ft_strnstr(str, 0, 10));
 // }

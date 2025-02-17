@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/21 12:46:31 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 14:38:45 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/14 16:20:14 by tolanini          #+#    #+#             */
+/*   Updated: 2025/02/17 18:12:06 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,22 @@
 
 void	ft_putnbr_fd(int n, int fd)
 {
-	if (n == -2147483648)
+	char	c;
+
+	if (n < 0)
 	{
-		write(fd, "-2147483648", 11);
+		write (fd, "-", 1);
+		if (n == -2147483648)
+		{
+			write (fd, "2147483648", 10);
+			return ;
+		}
+		n = -n;
 	}
-	else
+	if (n > 9)
 	{
-		if (n < 0)
-		{
-			ft_putchar_fd('-', fd);
-			n = -n;
-		}
-		if (n >= 10)
-		{
-			ft_putnbr_fd(n / 10, fd);
-		}
-		ft_putchar_fd((n % 10) + '0', fd);
+		ft_putnbr_fd(n / 10, fd);
 	}
+	c = (n % 10) + 48;
+	write (fd, &c, 1);
 }

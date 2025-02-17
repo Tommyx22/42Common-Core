@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 11:49:16 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 15:22:58 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/20 18:03:18 by tolanini          #+#    #+#             */
+/*   Updated: 2025/02/17 18:12:06 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	char	*str;
-	size_t	i;
+	char			*str;
+	unsigned int	i;
 
 	i = 0;
 	str = (char *)malloc(ft_strlen(s) + 1);
 	if (!str || !s)
 		return (NULL);
-	while (s[i] != '\0')
+	while (s[i])
 	{
-		str[i] = (*f)(i, s[i]);
+		str[i] = f(i, s[i]);
 		i++;
 	}
 	str[i] = 0;

@@ -1,3 +1,4 @@
+
 NAME 		= fdf
 MLX 		= libmlx_Linux.a
 LIBFT 		= libft.a
@@ -7,26 +8,25 @@ MLX_PATH 	= ./mlx_linux/
 INCLUDES 	= ./include
 SRCDIR 		= ./srcs/
 
-SRC 		= $(SRCDIR)fdf_main.c \
+SRC 		= $(SRCDIR)main.c \
 				$(SRCDIR)close.c \
 				$(SRCDIR)color.c \
-				$(SRCDIR)drawing.c \
-				$(SRCDIR)initializer_utility.c \
-				$(SRCDIR)initializer.c \
-				$(SRCDIR)key_handling.c \
-				$(SRCDIR)instruction.c \
-				$(SRCDIR)views.c \
-				$(SRCDIR)read_map.c \
+				$(SRCDIR)draw.c \
+				$(SRCDIR)init_utils.c \
+				$(SRCDIR)init.c \
+				$(SRCDIR)key_handle.c \
+				$(SRCDIR)menu.c \
+				$(SRCDIR)project.c \
+				$(SRCDIR)read.c \
 				$(SRCDIR)render.c \
 				$(SRCDIR)rotate.c \
 				$(SRCDIR)transform.c \
-				$(SRCDIR)utility.c
+				$(SRCDIR)utils.c
 
 OBJ=$(notdir $(SRC:.c=.o))
-#OBJ= fdf.o
 
 CF 			= -Wall -Wextra -Werror
-CC 			= clang
+CC 			= cc
 MLX_CF 		= -lm -lbsd -lmlx -lXext -lX11
 CFI 		= -I$(INCLUDES)
 LEAKS 		= valgrind
@@ -92,9 +92,12 @@ fclean: clean
 	@printf "$(GR)All libraries removed!$(RC)\n\n"
 	make cleanleaks
 
+install: 
+	sudo apt-get install gcc make xorg libxext-dev libbsd-dev -y
+	@printf "$(GR)All dependencies ready!$(RC)\n\n"
+
 .PHONY: clean fclean re rebonus all bonus
 
-# Colors
 GR	= \033[32;1m
 RE	= \033[31;1m
 YE	= \033[33;1m

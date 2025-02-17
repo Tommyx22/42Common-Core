@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/19 14:51:54 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 15:24:10 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/17 18:01:45 by tolanini          #+#    #+#             */
+/*   Updated: 2025/02/17 18:12:06 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,8 @@
 
 int	ft_toupper(int c)
 {
-	if (c >= 97 && c <= 122)
-	{
+	if (c >= 'a' && c <= 'z')
 		return (c - 32);
-	}
 	return (c);
 }
 // #include <stdio.h>

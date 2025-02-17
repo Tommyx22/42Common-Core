@@ -5,23 +5,27 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/17 15:54:36 by tolanini          #+#    #+#             */
-/*   Updated: 2025/02/17 17:21:17 by tolanini         ###   ########.fr       */
+/*   Created: 2025/02/17 17:33:22 by tolanini          #+#    #+#             */
+/*   Updated: 2025/02/17 18:12:06 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_addpart(char **result, const char *prev, size_t size, char c)
+void	ft_createsplit(char **result, char const *s, char c);
+size_t	ft_addpart(char **result, const char *prev, size_t size, char c);
+
+char	**ft_split(char const *s, char c)
 {
-	if (*prev == c)
-	{
-		prev++;
-		size--;
-	}
-	*result = (char *)malloc((size + 1) * sizeof(char));
-	ft_strlcpy(*result, prev, size + 1);
-	return (1);
+	char	**result;
+
+	if (!s)
+		return (NULL);
+	result = (char **)malloc((ft_split_count(s, c) + 1) * sizeof(char *));
+	if (!result)
+		return (NULL);
+	ft_createsplit(result, s, c);
+	return (result);
 }
 
 void	ft_createsplit(char **result, char const *s, char c)
@@ -51,6 +55,18 @@ void	ft_createsplit(char **result, char const *s, char c)
 	result[j] = NULL;
 }
 
+size_t	ft_addpart(char **result, const char *prev, size_t size, char c)
+{
+	if (*prev == c)
+	{
+		prev++;
+		size--;
+	}
+	*result = (char *)malloc((size + 1) * sizeof(char));
+	ft_strlcpy(*result, prev, size + 1);
+	return (1);
+}
+
 size_t	ft_split_count(const char *s, char c)
 {
 	size_t	i;
@@ -76,17 +92,4 @@ size_t	ft_split_count(const char *s, char c)
 		i++;
 	}
 	return (counter);
-}
-
-char	**ft_split(char const *s, char c)
-{
-	char	**result;
-
-	if (!s)
-		return (NULL);
-	result = (char **)malloc((ft_split_count(s, c) + 1) * sizeof(char *));
-	if (!result)
-		return (NULL);
-	ft_createsplit(result, s, c);
-	return (result);
 }

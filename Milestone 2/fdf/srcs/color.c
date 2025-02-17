@@ -1,44 +1,28 @@
-#include "../includes/fdf.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   color.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/17 17:59:29 by tolanini          #+#    #+#             */
+/*   Updated: 2025/02/17 18:12:06 by tolanini         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-t_color	*color_Pal_init(int min_color, int max_color)
+#include "../include/fdf.h"
+
+static int	color_gradient(t_color *color, float progress);
+
+int	get_color(t_color *color, int i_line, int line_size)
 {
-	t_color	*color;
+	float	progress;
 
-	color = ft_calloc(1, sizeof(t_color));
-	color->start_color = min_color;
-	color->start_r = (C_RED & min_color) >> 16;
-	color->start_g = (C_GREEN & min_color) >> 8;
-	color->start_b = (C_BLUE & min_color);
-	color->end_color = max_color;
-	color->end_r = (C_RED & max_color) >> 16;
-	color->end_g = (C_GREEN & max_color) >> 8;
-	color->end_b = (C_BLUE & max_color);
-	color->delta_r = (color->end_r - color->start_r);
-	color->delta_g = (color->end_g - color->start_g);
-	color->delta_b = (color->end_b - color->start_b);
-	return (color);
+	progress = (float) i_line / (float) line_size;
+	return (color_gradient(color, progress));
 }
 
-t_color	*color_init(t_point start, t_point end)
-{
-	t_color	*color;
-
-	color = ft_calloc(1, sizeof(t_color));
-	color->start_color = start.color;
-	color->start_r = (C_RED & start.color) >> 16;
-	color->start_g = (C_GREEN & start.color) >> 8;
-	color->start_b = (C_BLUE & start.color);
-	color->end_color = end.color;
-	color->end_r = (C_RED & end.color) >> 16;
-	color->end_g = (C_GREEN & end.color) >> 8;
-	color->end_b = (C_BLUE & end.color);
-	color->delta_r = (color->end_r - color->start_r);
-	color->delta_g = (color->end_g - color->start_g);
-	color->delta_b = (color->end_b - color->start_b);
-	return (color);
-}
-
-static int	gradient(t_color *color, float progress)
+static int	color_gradient(t_color *color, float progress)
 {
 	int		r;
 	int		g;
@@ -64,10 +48,40 @@ static int	gradient(t_color *color, float progress)
 	return (color->start_color + r + g + b);
 }
 
-int	get_color(t_color *color, int i_line, int line_size)
+t_color	*color_init(t_point start, t_point end)
 {
-	float	progress;
+	t_color	*color;
 
-	progress = (float)i_line / (float)line_size;
-	return (gradient(color, progress));
+	color = ft_calloc(1, sizeof(t_color));
+	color->start_color = start.color;
+	color->start_r = (C_RED & start.color) >> 16;
+	color->start_g = (C_GREEN & start.color) >> 8;
+	color->start_b = (C_BLUE & start.color);
+	color->end_color = end.color;
+	color->end_r = (C_RED & end.color) >> 16;
+	color->end_g = (C_GREEN & end.color) >> 8;
+	color->end_b = (C_BLUE & end.color);
+	color->delta_r = (color->end_r - color->start_r);
+	color->delta_g = (color->end_g - color->start_g);
+	color->delta_b = (color->end_b - color->start_b);
+	return (color);
+}
+
+t_color	*color_pallet_init(int min_color, int max_color)
+{
+	t_color	*color;
+
+	color = ft_calloc(1, sizeof(t_color));
+	color->start_color = min_color;
+	color->start_r = (C_RED & min_color) >> 16;
+	color->start_g = (C_GREEN & min_color) >> 8;
+	color->start_b = (C_BLUE & min_color);
+	color->end_color = max_color;
+	color->end_r = (C_RED & max_color) >> 16;
+	color->end_g = (C_GREEN & max_color) >> 8;
+	color->end_b = (C_BLUE & max_color);
+	color->delta_r = (color->end_r - color->start_r);
+	color->delta_g = (color->end_g - color->start_g);
+	color->delta_b = (color->end_b - color->start_b);
+	return (color);
 }

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/21 12:45:17 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/21 13:10:15 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/14 16:20:18 by tolanini          #+#    #+#             */
+/*   Updated: 2025/02/17 18:12:06 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,12 @@
 
 void	ft_putstr_fd(char *s, int fd)
 {
-	while (*s)
+	int	i;
+
+	i = 0;
+	while (s[i] != '\0')
 	{
-		write(fd, s, 1);
-		s++;
+		write (fd, &s[i], 1);
+		i++;
 	}
 }

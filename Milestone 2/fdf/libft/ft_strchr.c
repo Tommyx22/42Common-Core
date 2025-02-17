@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/19 15:01:01 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 15:21:42 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/17 18:12:57 by tolanini          #+#    #+#             */
+/*   Updated: 2025/02/17 18:12:06 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*ft_strchr(const char *str, int c)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while (str[i] != '\0')

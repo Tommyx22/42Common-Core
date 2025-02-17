@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/19 17:38:53 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 15:16:01 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/17 18:45:39 by tolanini          #+#    #+#             */
+/*   Updated: 2025/02/17 18:12:06 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,29 @@
 
 int	ft_atoi(const char *nptr)
 {
-	int	nbr;
 	int	i;
-	int	tot;
+	int	atoi;
+	int	min;
 
 	i = 0;
-	tot = 0;
-	nbr = 1;
+	atoi = 0;
+	min = 1;
 	while ((nptr[i] >= 9 && nptr[i] <= 13) || nptr[i] == 32)
 		i++;
-	if (nptr[i] == '-' || nptr[i] == '+')
+	if (nptr[i] == '+' || nptr[i] == '-')
 	{
 		if (nptr[i] == '-')
-			nbr = -nbr;
+		{
+			min = -min;
+		}
 		i++;
 	}
 	while (nptr[i] >= '0' && nptr[i] <= '9')
 	{
-		tot = (tot * 10) + (nptr[i] - '0');
+		atoi = ((atoi * 10) + (nptr[i] - 48));
 		i++;
 	}
-	return (nbr * tot);
+	return (atoi * min);
 }
 // #include <stdlib.h>
 // #include <stdio.h>

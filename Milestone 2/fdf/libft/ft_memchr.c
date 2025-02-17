@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/19 15:35:33 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 15:19:54 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/17 18:55:58 by tolanini          #+#    #+#             */
+/*   Updated: 2025/02/17 18:12:06 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,16 @@
 
 void	*ft_memchr(const void *s, int c, size_t n)
 {
-	size_t	i;
+	size_t				i;
+	unsigned char		*str;
 
+	str = (unsigned char *)s;
 	i = 0;
 	while (i < n)
 	{
-		if (((const unsigned char *)s)[i] == (unsigned char)c)
+		if (str[i] == (unsigned char)c)
 		{
-			return ((void *)((const unsigned char *)s + i));
+			return ((void *)&str[i]);
 		}
 		i++;
 	}

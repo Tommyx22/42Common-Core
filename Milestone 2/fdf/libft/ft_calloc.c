@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/20 16:15:23 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 15:16:33 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/14 16:19:00 by tolanini          #+#    #+#             */
+/*   Updated: 2025/02/17 18:12:06 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 void	*ft_calloc(size_t nmemb, size_t size)
 {
-	void	*ptr;
+	void	*arr;
 
-	ptr = malloc(nmemb * size);
-	if (ptr == NULL)
+	arr = malloc(nmemb * size);
+	if (arr == NULL)
 		return (NULL);
-	ft_bzero(ptr, nmemb * size);
-	return (ptr);
+	ft_bzero(arr, nmemb * size);
+	return (arr);
 }
 // #include <stdio.h>
 // #include <stdlib.h>
