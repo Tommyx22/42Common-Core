@@ -53,13 +53,13 @@ static void fill_point(char *point, t_map *map, int x, int y)
     char    **info;
     int     i;
 
-    map->coordinates[coord_x][coord_y].x = (float)coord_x;
-	map->coordinates[coord_x][coord_y].y = (float)coord_y;
+    map->coordinates[x][y].x = (float)x;
+	map->coordinates[x][y].y = (float)y;
     if (ft_strchr(point, ','))
     {
         info = ft_split(point, ',');
-        map->coordinates[coord_x][coord_y].z = (float)ft_atoi(info[0]);
-		map->coordinates[coord_x][coord_y].color = \
+        map->coordinates[x][y].z = (float)ft_atoi(info[0]);
+		map->coordinates[x][y].color = \
 			ft_atoi_base(info[1], HEXADECIMAL_L_BASE);
         i = 0;
         while (info[i])
@@ -68,13 +68,13 @@ static void fill_point(char *point, t_map *map, int x, int y)
     }
     else
     {
-        map->coordinates[coord_x][coord_y].z = (float)ft_atoi(point);
-		map->coordinates[coord_x][coord_y].color = -1;
+        map->coordinates[x][y].z = (float)ft_atoi(point);
+		map->coordinates[x][y].color = -1;
     }
-    if (map->coordinates[coord_x][coord_y].z > map->max_z)
-        map->max_z = map->coordinates[coord_x][coord_y].z;
-    if (map->coordinates[coord_x][coord_y].z < map->min_z)
-        map->min_z = map->coordinates[coord_x][coord_y].z;
+    if (map->coordinates[x][y].z > map->max_z)
+        map->max_z = map->coordinates[x][y].z;
+    if (map->coordinates[x][y].z < map->min_z)
+        map->min_z = map->coordinates[x][y].z;
 }
 
 static void get_points(char *file_name, t_map *map)
@@ -112,10 +112,10 @@ t_map   *read_map(char *file_name)
     int     fd;
 
     fd = open(file_name, O_RDONLY, 0);
-    if (fd < 0);
+    if (fd < 0)
     {
         write(1, "ERROR READING FILE", 18);
-        exit(exit_code);
+        exit(0);
     }
     close(fd);
     map = init_map();

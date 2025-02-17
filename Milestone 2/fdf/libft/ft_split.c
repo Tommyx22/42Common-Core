@@ -5,72 +5,88 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/20 17:58:31 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 19:20:12 by tolanini         ###   ########.fr       */
+/*   Created: 2025/02/17 15:54:36 by tolanini          #+#    #+#             */
+/*   Updated: 2025/02/17 17:21:17 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	ft_count_wrld(char const *s, char c)
+size_t	ft_addpart(char **result, const char *prev, size_t size, char c)
 {
-	int		wrld;
-	size_t	i;
-
-	wrld = 0;
-	i = 0;
-	while (s[i] != '\0')
+	if (*prev == c)
 	{
-		if (s[i] != c && (s[i + 1] == c || s[i + 1] == '\0'))
-			wrld++;
+		prev++;
+		size--;
+	}
+	*result = (char *)malloc((size + 1) * sizeof(char));
+	ft_strlcpy(*result, prev, size + 1);
+	return (1);
+}
+
+void	ft_createsplit(char **result, char const *s, char c)
+{
+	size_t	i;
+	size_t	j;
+	size_t	size;
+	size_t	prev;
+	size_t	next;
+
+	i = 0;
+	j = 0;
+	prev = i;
+	next = i;
+	while (1)
+	{
+		if (s[i] == c || s[i] == '\0')
+			next = i;
+		size = next - prev;
+		if (size > 1 || (size == 1 && s[i - 1] != c))
+			j += ft_addpart(&result[j], &s[prev], size, c);
+		if (s[i] == '\0')
+			break ;
+		prev = next;
 		i++;
 	}
-	return (wrld);
+	result[j] = NULL;
 }
 
-static char	*ft_strndup(const char *s, size_t n)
+size_t	ft_split_count(const char *s, char c)
 {
-	char	*ptr;
+	size_t	i;
+	size_t	prev;
+	size_t	next;
+	size_t	size;
+	size_t	counter;
 
-	ptr = (char *) malloc(sizeof(char) * (n + 1));
-	if (ptr == NULL)
-		return (NULL);
-	ft_strlcpy(ptr, s, n + 1);
-	return (ptr);
-}
-
-static char	**ft_remove(char **tab, int wrld)
-{
-	while (wrld > 0)
-		free(tab[wrld--]);
-	return (NULL);
+	i = 0;
+	prev = i;
+	next = i;
+	counter = 0;
+	while (1)
+	{
+		if (s[i] == c || s[i] == '\0')
+			next = i;
+		size = next - prev;
+		if (size > 1 || (size == 1 && s[i - 1] != c))
+			counter++;
+		if (s[i] == '\0')
+			break ;
+		prev = next;
+		i++;
+	}
+	return (counter);
 }
 
 char	**ft_split(char const *s, char c)
 {
-	char	**tab;
-	int		wrld;
-	int		start;
-	int		end;
+	char	**result;
 
-	tab = (char **)malloc(sizeof(char *) * (ft_count_wrld(s, c) + 1));
-	if (!s || !tab)
+	if (!s)
 		return (NULL);
-	wrld = 0;
-	start = 0;
-	end = 0;
-	while (wrld < ft_count_wrld(s, c))
-	{
-		while (s[end] == c)
-			end++;
-		start = end;
-		while (s[end] != c && s[end] != '\0')
-			end++;
-		tab[wrld] = ft_strndup(&s[start], end - start);
-		if (!tab[wrld])
-			return (ft_remove(tab, wrld));
-		wrld++;
-	}
-	tab[wrld] = NULL;
-	return (tab);
+	result = (char **)malloc((ft_split_count(s, c) + 1) * sizeof(char *));
+	if (!result)
+		return (NULL);
+	ft_createsplit(result, s, c);
+	return (result);
 }

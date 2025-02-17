@@ -1,29 +1,29 @@
 #include "../includes/fdf.h"
 
-static void	apply_colors(t_fdf fdf, t_pointpoint)
+static void	apply_colors(t_fdf fdf, t_point point)
 {
 	t_color	*col;
 
 	col = NULL;
-	if (fdf->cam->color_Pal == FALSE)
+	if (fdf.cam->color_Pal == FALSE)
 	{
-		if (point->color == -1)
-			point->color = LINE_DEFAULT;
+		if (point.color == -1)
+			point.color = LINE_DEFAULT;
 	}
 	else
 	{
-		if (point->z >= 0)
+		if (point.z >= 0)
 		{
 			col = color_Pal_init(C_GREY, C_ORANGY);
-			point->color = get_color(col, absolute(point->z), \
-				absolute(fdf->map->max_z));
+			point.color = get_color(col, absolute(point.z), \
+				absolute(fdf.map->max_z));
 			free(col);
 		}
 		else
 		{
 			col = color_Pal_init(C_GREY, C_BLUEY);
-			point->color = get_color(col, absolute(point->z), \
-				absolute(fdf->map->max_z));
+			point.color = get_color(col, absolute(point.z), \
+				absolute(fdf.map->max_z));
 			free(col);
 		}
 	}
@@ -33,15 +33,15 @@ static void	render_draw_line(t_fdf *fdf, t_point start, t_point end)
 {
 	start.z *= fdf->cam->scale_z;
 	end.z *= fdf->cam->scale_z;
-	apply_colors(fdf, &start);
-	apply_colors(fdf, &end);
+	apply_colors(*fdf, start);
+	apply_colors(*fdf, end);
 	fdf->image->line = init_line(start, end, fdf);
 	if (!fdf->image->line)
-		close_all(fdf, 7);
+		close_all(fdf);
 	rotate(fdf->cam, fdf->image->line);
 	fdf_views(fdf->cam, fdf->image->line);
-	transform(fdf, fdf->image->line);
-	brasenham(fdf, fdf->image->line->start, fdf->image->line->end);
+	transform(fdf->cam, fdf->image->line);
+	bresenham(fdf, fdf->image->line->start, fdf->image->line->end);
 	free(fdf->image->line);
 }
 

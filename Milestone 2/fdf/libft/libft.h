@@ -13,10 +13,16 @@
 #ifndef LIBFT_H
 # define LIBFT_H
 
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 4
+# endif
+
 # include <stdlib.h>
 # include <string.h>
 # include <stdio.h>
 # include <unistd.h>
+# include <fcntl.h>
+
 
 typedef struct s_list
 {
@@ -25,6 +31,7 @@ typedef struct s_list
 }	t_list;
 
 int		ft_atoi(const char *nptr);
+int		ft_atoi_base(char *str, char *base);
 void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t nmemb, size_t size);
 int		ft_isalnum(int c);

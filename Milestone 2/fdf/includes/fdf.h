@@ -132,16 +132,17 @@ void	print_instruction(t_fdf *fdf);
 int key_pressed(int keycode, t_fdf *fdf);
 t_map   *read_map(char *file_name);
 void	render(t_fdf *fdf);
-void	rotate(t_cam cam, t_line line);
+void	rotate(t_cam *cam, t_line *line);
 void	rotate_x(t_line line, double angle);
-void	rotate_y(t_line line, double angle);
+void    rotate_y(t_line line, double angle);
 void	rotate_z(t_line line, double angle);
 void	scale(t_line *line, int scale);
 void	translate(t_line *line, int move_x, int move_y);
-void	transform(t_cam cam, t_line *line);
+void	transform(t_cam *cam, t_line *line);
 float	absolute(float nbr);
 float	max(float a, float b);
 float	min(float a, float b);
 void	fdf_views(t_cam *cam, t_line *line);
+size_t	ft_split_count(const char *s, char c);
 
 #endif

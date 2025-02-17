@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glancell <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/01 18:48:36 by glancell          #+#    #+#             */
-/*   Updated: 2024/12/22 18:54:41 by glancell         ###   ########.fr       */
+/*   Created: 2024/12/01 18:48:36 by tolanini          #+#    #+#             */
+/*   Updated: 2025/02/17 17:24:50 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "libft.h"
 
 static int	ft_read(int fd, char **str, char *buffer)
 {

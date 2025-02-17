@@ -16,7 +16,7 @@ void	translate(t_line *line, int move_x, int move_y)
 	line->end.y += move_y;
 }
 
-void	transform(t_cam cam, t_line *line)
+void	transform(t_cam *cam, t_line *line)
 {
 	scale(line, cam->scale);
 	translate(line, cam->move_x, cam->move_y);

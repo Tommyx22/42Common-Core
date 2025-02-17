@@ -1,6 +1,6 @@
 #include "../includes/fdf.h"
 
-static void	isometric(t_line *line)
+static void	isometric_view(t_line *line)
 {
 	t_point	new_start;
 	t_point	new_end;
@@ -16,13 +16,13 @@ static void	isometric(t_line *line)
 	line->end.y = new_end.y;
 }
 
-static void	perspective(t_line *line)
+static void	perspective_view(t_line *line)
 {
 	t_point	new_start;
 	t_point	new_end;
 	double	z;
 
-	rotate_x(line, 3 * -ANG_45);
+	rotate_x(*line, 3 * -ANG_45);
 	z = line->start.z + line->transform_z;
 	new_start.x = line->start.x / z;
 	new_start.y = line->start.y / z;
