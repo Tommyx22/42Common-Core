@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 17:59:34 by tolanini          #+#    #+#             */
-/*   Updated: 2025/02/17 18:12:06 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:04:15 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	close_all(t_fdf *fdf)
 	mlx_destroy_display(fdf->mlx);
 	free(fdf->mlx);
 	free(fdf);
+	exit(0);
 	return (0);
 }
 

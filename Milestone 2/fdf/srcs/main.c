@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 17:59:49 by tolanini          #+#    #+#             */
-/*   Updated: 2025/02/17 18:12:06 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:17:51 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ int	main(int argc, char **argv)
 	t_fdf	*fdf;
 
 	if (argc != 2)
+	{
 		write(1, "Wrong usage. Expected './fdf <file_path>'.\n", 44);
+		exit(0);
+	}
 	file_name = argv[1];
 	fdf = init_fdf(file_name);
 	render(fdf);
