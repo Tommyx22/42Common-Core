@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 17:59:19 by tolanini          #+#    #+#             */
-/*   Updated: 2025/02/17 18:12:06 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/03/04 16:32:59 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,17 +44,17 @@
 
 # define KEY_Z		122
 # define KEY_X		120
-# define KEY_P		112
+# define KEY_P		115
+# define KEY_D		100
+# define KEY_Q		113
+# define KEY_W		119
+# define KEY_E		101
+# define KEY_ESC    65307		112
 # define KEY_I		105
 # define KEY_O		111
 # define KEY_L		108
 # define KEY_R		114
 # define KEY_A		97
-# define KEY_S		115
-# define KEY_D		100
-# define KEY_Q		113
-# define KEY_W		119
-# define KEY_E		101
-# define KEY_ESC    65307
+# define KEY_S
 
 #endif
