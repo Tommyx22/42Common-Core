@@ -7,9 +7,9 @@ MLX_PATH 	= ./mlx_linux/
 INCLUDES 	= ./include
 SRCDIR 		= ./srcs/
 
-SRC 		= $(SRCDIR)main.c
+SRC 		= $(SRCDIR)main.c $(SRCDIR)drawing.c $(SRCDIR)parsing.c $(SRCDIR)camera.c 
 
-OBJ = objs/main.o
+OBJ = objs/main.o objs/drawing.o objs/parsing.o objs/camera.o
 
 CF 			= -Wall -Wextra -Werror
 CC 			= cc
