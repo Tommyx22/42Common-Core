@@ -23,10 +23,10 @@
 
 # define WINDOW_WIDTH		1200
 # define WINDOW_HEIGHT		900
-# define OFFSET_X			(WINDOW_WIDTH / 2)
-# define OFFSET_Y			(WINDOW_HEIGHT / 2)
-# define SCALE_FACTOR		5
-# define Z_SCALE			20
+# define OFFSET_X			680
+# define OFFSET_Y			290
+# define SCALE_FACTOR		25
+# define Z_SCALE			10
 # define C_TEXT				0xffffff
 
 # define ISOMETRIC			0

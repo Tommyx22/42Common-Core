@@ -79,9 +79,9 @@ void	transform_point(t_vars *vars, t_point *p, int x, int y)
 	p->x *= vars->camera.zoom;
 	p->y *= vars->camera.zoom;
 	
-	// Center the map
-	p->x -= (vars->width * vars->camera.zoom) / 2;
-	p->y -= (vars->height * vars->camera.zoom) / 2;
+	// Remove automatic centering
+	// p->x -= (vars->width * vars->camera.zoom) / 2;
+	// p->y -= (vars->height * vars->camera.zoom) / 2;
 	
 	// Apply rotations
 	if (vars->camera.alpha != 0)

@@ -180,27 +180,3 @@ void parse(char **ag, t_vars *vars)
 
     close(fd);
 }
-
-// Updated function to free all resources
-int close_s(t_vars *vars)
-{
-    if (vars) {
-        if (vars->points) {
-            for (int i = 0; i < vars->height; i++)
-                free(vars->points[i]);
-            free(vars->points);
-        }
-        
-        if (vars->win && vars->mlx)
-            mlx_destroy_window(vars->mlx, vars->win);
-        
-        if (vars->mlx) {
-            mlx_destroy_display(vars->mlx);
-            free(vars->mlx);
-        }
-        
-        free(vars);
-    }
-    exit(0);
-    return (0);
-}
