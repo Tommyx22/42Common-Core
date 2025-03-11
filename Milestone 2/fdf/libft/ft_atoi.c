@@ -6,37 +6,35 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 18:45:39 by tolanini          #+#    #+#             */
-/*   Updated: 2025/02/17 18:12:06 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/03/11 20:18:24 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_atoi(const char *nptr)
+long	ft_atoi(const char *nptr)
 {
+	int	nbr;
 	int	i;
-	int	atoi;
-	int	min;
+	int	tot;
 
 	i = 0;
-	atoi = 0;
-	min = 1;
+	tot = 0;
+	nbr = 1;
 	while ((nptr[i] >= 9 && nptr[i] <= 13) || nptr[i] == 32)
 		i++;
-	if (nptr[i] == '+' || nptr[i] == '-')
+	if (nptr[i] == '-' || nptr[i] == '+')
 	{
 		if (nptr[i] == '-')
-		{
-			min = -min;
-		}
+			nbr = -nbr;
 		i++;
 	}
 	while (nptr[i] >= '0' && nptr[i] <= '9')
 	{
-		atoi = ((atoi * 10) + (nptr[i] - 48));
+		tot = (tot * 10) + (nptr[i] - '0');
 		i++;
 	}
-	return (atoi * min);
+	return (nbr * tot);
 }
 // #include <stdlib.h>
 // #include <stdio.h>

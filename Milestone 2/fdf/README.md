@@ -1,1 +1,0 @@
-this project ask you to create a simple wireframe model representation of a 3D landscape linking various points like x, y, z using MiniLibX (C library for developing of a graphical enviroment)
