@@ -6,143 +6,62 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:46:29 by tolanini          #+#    #+#             */
-/*   Updated: 2025/03/12 16:27:13 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/03/12 17:54:28 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
 
-int	color_lerp(int c1, int c2, double t)
-{
-	int	r1;
-	int	g1;
-	int	b1;
-	int	r2;
-	int	g2;
-	int	b2;
-	int	r;
-	int	g;
-	int	b;
-
-	r1 = (c1 >> 16) & 0xFF;
-	g1 = (c1 >> 8) & 0xFF;
-	b1 = c1 & 0xFF;
-	r2 = (c2 >> 16) & 0xFF;
-	g2 = (c2 >> 8) & 0xFF;
-	b2 = c2 & 0xFF;
-	r = r1 + (int)(t * (r2 - r1));
-	g = g1 + (int)(t * (g2 - g1));
-	b = b1 + (int)(t * (b2 - b1));
-	return ((r << 16) | (g << 8) | b);
-}
-
 void	bresenham(t_vars *vars, t_point p1, t_point p2)
 {
-	int		dx;
-	int		dy;
-	int		sx;
-	int		sy;
-	int		err;
-	double	dist;
-	double	step;
-	t_point	current;
+	t_bres	b;
 	double	t;
 	int		color;
-	int		e2;
 
-	dx = abs(p2.x - p1.x);
-	dy = abs(p2.y - p1.y);
-	err = dx - dy;
-	dist = sqrt(dx * dx + dy * dy);
-	step = 0;
-	current = p1;
-	if (p1.x < p2.x)
-		sx = 1;
-	else
-		sx = -1;
-	if (p1.y < p2.y)
-		sy = 1;
-	else
-		sy = -1;
+	init_bresenham(p1, p2, &b);
+	b.p2 = p2;
 	while (1)
 	{
-		if (dist > 0)
-			t = step / dist;
+		if (b.dist > 0)
+			t = b.step / b.dist;
 		else
 			t = 0;
 		color = color_lerp(p1.color, p2.color, t);
-		if (current.x >= 0 && current.x < WINDOW_WIDTH
-			&& current.y >= 0 && current.y < WINDOW_HEIGHT)
-			mlx_pixel_put(vars->mlx, vars->win, current.x, current.y, color);
-		if (current.x == p2.x && current.y == p2.y)
+		if (b.current.x >= 0 && b.current.x < WINDOW_WIDTH
+			&& b.current.y >= 0 && b.current.y < WINDOW_HEIGHT)
+			mlx_pixel_put(vars->mlx, vars->win,
+				b.current.x, b.current.y, color);
+		if (b.current.x == p2.x && b.current.y == p2.y)
 			break ;
-		e2 = 2 * err;
-		if (e2 > -dy)
-		{
-			err -= dy;
-			current.x += sx;
-		}
-		if (e2 < dx)
-		{
-			err += dx;
-			current.y += sy;
-		}
-		step += 1.0;
+		update_bresenham(&b);
 	}
 }
 
 void	transform_point(t_vars *vars, t_point *p, int x, int y)
 {
 	float	z;
-	float	y_temp;
-	float	x_temp;
 
 	z = p->z;
 	p->x = x;
 	p->y = y;
 	p->x *= vars->camera.zoom;
 	p->y *= vars->camera.zoom;
-	if (vars->camera.alpha != 0)
-	{
-		y_temp = p->y;
-		p->y = p->y * cos(vars->camera.alpha) + z *
-			vars->camera.z_scale * sin(vars->camera.alpha);
-		z = -y_temp * sin(vars->camera.alpha) + z *
-			cos(vars->camera.alpha);
-	}
-	if (vars->camera.beta != 0)
-	{
-		x_temp = p->x;
-		p->x = p->x * cos(vars->camera.beta) + z * vars->camera.z_scale * sin(vars->camera.beta);
-		z = -x_temp * sin(vars->camera.beta) + z * cos(vars->camera.beta);
-	}
-	if (vars->camera.gamma != 0)
-	{
-		x_temp = p->x;
-		p->x = p->x * cos(vars->camera.gamma) - p->y * sin(vars->camera.gamma);
-		p->y = x_temp * sin(vars->camera.gamma) + p->y * cos(vars->camera.gamma);
-	}
-	if (vars->camera.projection == ISOMETRIC)
-	{
-		x_temp = p->x;
-		p->x = (x_temp - p->y) * cos(0.523599);
-		p->y = (x_temp + p->y) * sin(0.523599) - z * vars->camera.z_scale;
-	}
-	else if (vars->camera.projection == TOP_VIEW)
-		p->y -= z * (vars->camera.z_scale * 0.1);
+	check_camera(vars, p, z);
 	p->x += vars->camera.x_offset;
 	p->y += vars->camera.y_offset;
 }
 
 void	find_z_range(t_vars *vars, int *min_z, int *max_z)
 {
+	int	y;
+	int	x;
+
 	*min_z = INT_MAX;
 	*max_z = INT_MIN;
-	
-	int y = 0;
+	y = 0;
 	while (y < vars->height)
 	{
-		int x = 0;
+		x = 0;
 		while (x < vars->width)
 		{
 			if (vars->points[y][x].z < *min_z)
@@ -155,87 +74,24 @@ void	find_z_range(t_vars *vars, int *min_z, int *max_z)
 	}
 }
 
-// Updated draw_map to use the camera settings
 void	draw_map(t_vars *vars)
 {
-	t_point p1, p2;
-	int min_z, max_z;
-	
-	// Find z range for color mapping
+	int		min_z;
+	int		max_z;
+	int		y;
+	int		x;
+
 	find_z_range(vars, &min_z, &max_z);
-	
-	// Clear the window
 	mlx_clear_window(vars->mlx, vars->win);
-	
-	int y = 0;
+	y = 0;
 	while (y < vars->height)
 	{
-		int x = 0;
+		x = 0;
 		while (x < vars->width)
 		{
-			// Initialize point with z and color
-			p1.z = vars->points[y][x].z;
-			
-			// Use height-based color in top view for better visualization
-			if (vars->camera.projection == TOP_VIEW && vars->points[y][x].color == C_TEXT)
-                p1.color = C_TEXT;
-            else
-                p1.color = vars->points[y][x].color;
-			
-			// Apply transformations
-			transform_point(vars, &p1, x, y);
-			
-			// Draw connection to the right
-			if (x + 1 < vars->width)
-			{
-				p2.z = vars->points[y][x + 1].z;
-				
-				if (vars->camera.projection == TOP_VIEW && vars->points[y][x + 1].color == C_TEXT)
-					p2.color = C_TEXT;
-				else
-					p2.color = vars->points[y][x + 1].color;
-					
-				transform_point(vars, &p2, x + 1, y);
-				bresenham(vars, p1, p2);
-			}
-			
-			// Draw connection downward
-			if (y + 1 < vars->height)
-			{
-				p2.z = vars->points[y + 1][x].z;
-				
-				if (vars->camera.projection == TOP_VIEW && vars->points[y + 1][x].color == C_TEXT)
-					p2.color = C_TEXT;
-				else
-					p2.color = vars->points[y + 1][x].color;
-					
-				transform_point(vars, &p2, x, y + 1);
-				bresenham(vars, p1, p2);
-			}
+			draw_line(x, y, vars);
 			x++;
 		}
 		y++;
 	}
-}
-
-// Draw information panel
-void	draw_menu(t_vars *vars)
-{
-	int		y;
-	void	*mlx;
-	void	*win;
-
-	mlx = vars->mlx;
-	win = vars->win;
-	y = 0;
-	mlx_string_put(mlx, win, 10, y += 20, C_TEXT, "How to use:");
-	mlx_string_put(mlx, win, 10, y += 20, C_TEXT, "Zoom: + / -");
-	mlx_string_put(mlx, win, 10, y += 20, C_TEXT, "Move: Arrow Keys");
-	mlx_string_put(mlx, win, 10, y += 20, C_TEXT, "Rotate X: W / S");
-	mlx_string_put(mlx, win, 10, y += 20, C_TEXT, "Rotate Y: A / D");
-	mlx_string_put(mlx, win, 10, y += 20, C_TEXT, "Rotate Z: Q / E");
-	mlx_string_put(mlx, win, 10, y += 20, C_TEXT, "Z-scale: Page Up / Down");
-	mlx_string_put(mlx, win, 10, y += 20, C_TEXT, "Projection: I (isometric) / T (top view)");
-	mlx_string_put(mlx, win, 10, y += 20, C_TEXT, "Reset: R");
-	mlx_string_put(mlx, win, 10, y += 20, C_TEXT, "Exit: ESC");
 }

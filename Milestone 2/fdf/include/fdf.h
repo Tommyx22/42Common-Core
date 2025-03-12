@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 15:54:40 by tolanini          #+#    #+#             */
-/*   Updated: 2025/03/11 20:40:14 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/03/12 17:57:05 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ typedef struct s_point
 	int		color;
 	int		x;
 	int		y;
-} t_point;
+}	t_point;
 
 typedef struct s_cam
 {
@@ -71,7 +71,7 @@ typedef struct s_cam
 	float	beta;
 	float	gamma;
 	int		projection;
-} t_cam;
+}	t_cam;
 
 typedef struct s_vars
 {
@@ -82,6 +82,20 @@ typedef struct s_vars
 	int		width;
 	t_cam	camera;
 }	t_vars;
+
+typedef struct s_bres
+{
+	int		dx;
+	int		dy;
+	int		sx;
+	int		sy;
+	int		err;
+	int		e2;
+	double	dist;
+	double	step;
+	t_point	current;
+	t_point	p2;
+}	t_bres;
 
 void	parse(char **ag, t_vars *vars);
 void	remove_spaces(char *str);
@@ -107,5 +121,12 @@ void	check_map(char *line, t_vars *vars, int fd);
 void	check_memory(t_vars *vars, int i);
 void	generic_util(char *line, t_vars *vars, int fd, int line_count);
 void	convert_map(char *line, t_vars *vars, char **values, int fd);
+void	x_point_drawing(int y, int x, t_vars *vars, t_point p1);
+void	y_point_drawing(int y, int x, t_vars *vars, t_point p1);
+void	draw_line(int x, int y, t_vars *vars);
+void	check_camera(t_vars *vars, t_point *p, float z);
+int		color_lerp(int c1, int c2, double t);
+void	init_bresenham(t_point p1, t_point p2, t_bres *b);
+void	update_bresenham(t_bres *b);
 
 #endif
