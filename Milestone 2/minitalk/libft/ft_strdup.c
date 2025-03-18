@@ -5,37 +5,36 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/20 16:31:45 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 15:21:50 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/06 10:14:51 by tolanini          #+#    #+#             */
+/*   Updated: 2025/03/18 15:58:41 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static void	ft_strcpy(char *dest, const char *src)
+static char	*ft_strcpy(char *dest, const char *s)
 {
 	int	i;
 
 	i = 0;
-	while (src[i] != '\0')
+	while (s[i] != '\0')
 	{
-		dest[i] = src[i];
+		dest[i] = s[i];
 		i++;
 	}
 	dest[i] = '\0';
+	return (dest);
 }
 
 char	*ft_strdup(const char *s)
 {
-	char	*str;
-	size_t	length;
+	char	*temp;
 
-	length = ft_strlen(s);
-	str = (char *)malloc(length + 1);
-	if (str == NULL)
+	temp = (char *)malloc((ft_strlen(s) + 1) * sizeof(char));
+	if (temp == NULL)
 		return (NULL);
-	ft_strcpy(str, s);
-	return (str);
+	ft_strcpy(temp, s);
+	return (temp);
 }
 // #include <stdio.h>
 // int main()

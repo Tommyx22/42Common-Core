@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 15:27:17 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/22 16:31:13 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/21 12:43:03 by tolanini          #+#    #+#             */
+/*   Updated: 2025/03/18 15:58:41 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 t_list	*ft_lstnew(void *content)
 {
-	t_list	*node;
+	t_list	*nodo;
 
-	node = (t_list *)malloc(sizeof(t_list));
-	if (node == NULL)
+	nodo = (t_list *)malloc(sizeof(t_list));
+	if (!nodo)
 		return (NULL);
-	node->content = content;
-	node->next = NULL;
-	return (node);
+	nodo->content = content;
+	nodo->next = NULL;
+	return (nodo);
 }

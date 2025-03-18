@@ -5,16 +5,17 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/18 11:57:33 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 15:16:56 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/14 16:14:00 by tolanini          #+#    #+#             */
+/*   Updated: 2025/03/18 15:58:41 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include "libft.h"
 
 int	ft_isalpha(int c)
 {
-	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
 	{
 		return (1);
 	}

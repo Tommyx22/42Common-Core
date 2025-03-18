@@ -5,26 +5,26 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/19 15:35:33 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 15:19:54 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/17 18:55:58 by tolanini          #+#    #+#             */
+/*   Updated: 2025/03/18 15:58:41 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <string.h>
 #include "libft.h"
 
 void	*ft_memchr(const void *s, int c, size_t n)
 {
-	size_t	i;
+	size_t				i;
+	unsigned char		*str;
 
+	str = (unsigned char *)s;
+	c = (unsigned char) c;
 	i = 0;
-	while (i < n)
-	{
-		if (((const unsigned char *)s)[i] == (unsigned char)c)
-		{
-			return ((void *)((const unsigned char *)s + i));
-		}
+	while ((str[i] != c) && (i + 1 < n))
 		i++;
-	}
+	if (str[i] == c && n != 0)
+		return (&str[i]);
 	return (NULL);
 }
 // #include <stdio.h>

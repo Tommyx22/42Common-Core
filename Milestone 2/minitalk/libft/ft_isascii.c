@@ -5,11 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/18 12:18:13 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 15:17:03 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/14 16:35:01 by tolanini          #+#    #+#             */
+/*   Updated: 2025/03/18 15:58:41 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <ctype.h>
+#include <stdio.h>
 #include "libft.h"
 
 int	ft_isascii(int c)

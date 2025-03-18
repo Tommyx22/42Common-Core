@@ -5,30 +5,37 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/21 12:46:31 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 14:38:45 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/14 16:20:14 by tolanini          #+#    #+#             */
+/*   Updated: 2025/03/18 15:58:41 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include "libft.h"
 
-void	ft_putnbr_fd(int n, int fd)
+int	ft_putnbr_fd(int n)
 {
-	if (n == -2147483648)
+	int		temp;
+	int		i;
+
+	i = 0;
+	if (n == 0)
+		return (write(1, "0", 1), 1);
+	else if (n < 0)
 	{
-		write(fd, "-2147483648", 11);
+		write (1, "-", ++i);
+		if (n == -2147483648)
+		{
+			write(1, "2147483648", 10);
+			return (i + 10);
+		}
+		n = -n;
 	}
-	else
+	temp = n;
+	while (temp > 0)
 	{
-		if (n < 0)
-		{
-			ft_putchar_fd('-', fd);
-			n = -n;
-		}
-		if (n >= 10)
-		{
-			ft_putnbr_fd(n / 10, fd);
-		}
-		ft_putchar_fd((n % 10) + '0', fd);
+		temp /= 10;
+		i++;
 	}
+	return (ft_conv(i, n, "0123456789"));
 }

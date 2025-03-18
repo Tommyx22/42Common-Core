@@ -5,16 +5,18 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/18 12:01:06 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 15:17:31 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/14 16:09:15 by tolanini          #+#    #+#             */
+/*   Updated: 2025/03/18 15:58:41 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <ctype.h>
+#include <stdio.h>
 #include "libft.h"
 
 int	ft_isdigit(int c)
 {
-	if (c >= 48 && c <= 57)
+	if (c >= '0' && c <= '9')
 	{
 		return (1);
 	}

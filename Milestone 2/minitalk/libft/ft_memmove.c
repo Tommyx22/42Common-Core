@@ -5,38 +5,39 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/18 15:48:34 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 15:20:24 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/14 16:19:34 by tolanini          #+#    #+#             */
+/*   Updated: 2025/03/18 15:58:41 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <string.h>
 #include "libft.h"
 
 void	*ft_memmove(void *dest, const void *src, size_t n)
 {
-	size_t	i;
+	size_t		i;
+	char		*dst;
+	const char	*str;
 
-	if (dest == src)
+	if (!dest && !src)
 		return (dest);
-	if (dest < src)
+	i = 0;
+	dst = dest;
+	str = src;
+	if (dest <= src)
 	{
-		i = 0;
-		while (i < n)
+		while (n--)
 		{
-			((char *)(dest))[i] = ((char *)(src))[i];
+			dst[i] = str[i];
 			i++;
 		}
 	}
 	else
 	{
-		i = n;
-		while (i > 0)
-		{
-			i--;
-			((char *)(dest))[i] = ((char *)(src))[i];
-		}
+		while (i + 1 <= n--)
+			dst[n] = str[n];
 	}
-	return (dest);
+	return (dst);
 }
 // #include <stdio.h>
 // int main() {

@@ -1,42 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   ft_putbase.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/14 16:43:14 by tolanini          #+#    #+#             */
-/*   Updated: 2025/03/18 15:57:07 by tolanini         ###   ########.fr       */
+/*   Created: 2024/10/29 16:26:36 by tolanini          #+#    #+#             */
+/*   Updated: 2025/03/18 15:58:41 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include "libft.h"
 
-void	take_signal(int sig)
+int	ft_putbase(unsigned long n, char *base)
 {
-	static int	c;
-	static int	i;
+	unsigned long	temp;
+	int				i;
 
-	if (sig == SIGUSR2)
-		c = c << 1;
-	else if (sig == SIGUSR1)
-		c = c << 1 | 0b00000001;
-	i++;
-	if (i == 8)
+	temp = n;
+	i = 0;
+	if (n == 0)
+		return (write (1, "0", 1), 1);
+	while (temp > 0)
 	{
-		ft_printf("%c", c);
-		i = 0;
-		c = 0;
+		temp /= 16;
+		i++;
 	}
-}
-
-int	main(void)
-{
-	ft_printf("PID process: %d\n", getpid());
-	while (1)
-	{
-		signal(SIGUSR1, take_signal);
-		signal(SIGUSR2, take_signal);
-	}
-	return (0);
+	return (ft_conv(i, n, base));
 }

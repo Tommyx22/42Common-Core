@@ -5,11 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/18 15:43:29 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 15:15:41 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/17 16:23:29 by tolanini          #+#    #+#             */
+/*   Updated: 2025/03/18 15:58:41 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <string.h>
 #include "libft.h"
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)

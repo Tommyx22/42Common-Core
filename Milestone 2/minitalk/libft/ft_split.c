@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/20 17:58:31 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 19:20:12 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/19 17:04:59 by tolanini          #+#    #+#             */
+/*   Updated: 2025/03/18 15:58:41 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,10 @@ static char	*ft_strndup(const char *s, size_t n)
 	return (ptr);
 }
 
-static char	**ft_remove(char **tab, int wrld)
+static void	ft_remove(char **tab, int wrld)
 {
-	while (wrld > 0)
+	while (wrld >= 0)
 		free(tab[wrld--]);
-	return (NULL);
 }
 
 char	**ft_split(char const *s, char c)
@@ -68,9 +67,20 @@ char	**ft_split(char const *s, char c)
 			end++;
 		tab[wrld] = ft_strndup(&s[start], end - start);
 		if (!tab[wrld])
-			return (ft_remove(tab, wrld));
+			return (ft_remove(tab, wrld), NULL);
 		wrld++;
 	}
 	tab[wrld] = NULL;
 	return (tab);
 }
+// int main()
+// {
+// 	char str1[] = "ciao fra";
+//     char **split1 = ft_split(str1, ' ');
+// 	int i = 0;
+//     while (split1[i] != NULL)
+// 	{
+//         printf("%s\n", split1[i]);
+//         i++;
+//     }
+// }

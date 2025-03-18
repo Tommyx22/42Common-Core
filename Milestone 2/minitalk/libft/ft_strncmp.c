@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/19 15:25:53 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/21 13:10:41 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/19 10:58:03 by tolanini          #+#    #+#             */
+/*   Updated: 2025/03/18 15:58:41 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,14 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 
 	i = 0;
 	if (n == 0)
-	{
 		return (0);
-	}
-	while (i < n)
+	while (s1[i] != '\0' && i < n - 1)
 	{
-		if (s1[i] != s2[i])
+		if (s1[i] < s2[i] || s1[i] > s2[i])
 		{
 			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 		}
-		if (s1[i] == '\0')
-		{
-			return (0);
-		}
 		i++;
 	}
-	return (0);
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }

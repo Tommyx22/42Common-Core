@@ -5,22 +5,23 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/20 16:15:23 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 15:16:33 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/14 16:19:00 by tolanini          #+#    #+#             */
+/*   Updated: 2025/03/18 15:58:41 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "libft.h"
 
-void	*ft_calloc(size_t nmemb, size_t size)
+void	*ft_calloc(size_t nmemb)
 {
-	void	*ptr;
+	void	*arr;
 
-	ptr = malloc(nmemb * size);
-	if (ptr == NULL)
+	arr = malloc(nmemb);
+	if (arr == NULL)
 		return (NULL);
-	ft_bzero(ptr, nmemb * size);
-	return (ptr);
+	ft_bzero(arr, nmemb);
+	return (arr);
 }
 // #include <stdio.h>
 // #include <stdlib.h>

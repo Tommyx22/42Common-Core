@@ -1,42 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   ft_conv.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/14 16:43:14 by tolanini          #+#    #+#             */
-/*   Updated: 2025/03/18 15:57:07 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/27 19:07:31 by tolanini          #+#    #+#             */
+/*   Updated: 2025/03/18 15:58:41 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include "libft.h"
 
-void	take_signal(int sig)
+int	ft_conv(int i, unsigned long n, char *base)
 {
-	static int	c;
-	static int	i;
+	char	*array;
+	int		b;
 
-	if (sig == SIGUSR2)
-		c = c << 1;
-	else if (sig == SIGUSR1)
-		c = c << 1 | 0b00000001;
-	i++;
-	if (i == 8)
+	b = ft_strlen(base);
+	array = malloc(sizeof(char) * (i + 1));
+	if (!array)
+		return (0);
+	array[i] = '\0';
+	while (n > 0)
 	{
-		ft_printf("%c", c);
-		i = 0;
-		c = 0;
+		array[--i] = base[n % b];
+		n = n / b;
 	}
-}
-
-int	main(void)
-{
-	ft_printf("PID process: %d\n", getpid());
-	while (1)
-	{
-		signal(SIGUSR1, take_signal);
-		signal(SIGUSR2, take_signal);
-	}
-	return (0);
+	while (array[i])
+		write (1, &array[i++], 1);
+	free (array);
+	return (i);
 }

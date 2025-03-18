@@ -5,28 +5,28 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/19 16:28:51 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 15:20:09 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/14 16:19:16 by tolanini          #+#    #+#             */
+/*   Updated: 2025/03/18 15:58:41 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
+#include <stdio.h>
 #include "libft.h"
 
 int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {
-	const unsigned char	*dest;
-	const unsigned char	*src;
+	const unsigned char	*s11;
+	const unsigned char	*s21;
 	size_t				i;
 
+	s11 = s1;
+	s21 = s2;
 	i = 0;
-	dest = (const unsigned char *)s1;
-	src = (const unsigned char *)s2;
 	while (i < n)
 	{
-		if (dest[i] != src[i])
-		{
-			return (dest[i] - src[i]);
-		}
+		if (s11[i] != s21[i])
+			return (s11[i] - s21[i]);
 		i++;
 	}
 	return (0);

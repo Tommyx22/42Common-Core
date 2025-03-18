@@ -5,38 +5,32 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/19 11:15:35 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 15:22:22 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/17 17:43:46 by tolanini          #+#    #+#             */
+/*   Updated: 2025/03/18 15:58:41 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <string.h>
 #include "libft.h"
 
 size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
+	size_t	len1;
+	size_t	len2;
 	size_t	i;
-	size_t	j;
-	size_t	res;
 
+	len1 = ft_strlen(dst);
+	len2 = ft_strlen(src);
 	i = 0;
-	j = 0;
-	res = 0;
-	while (dst[i])
-		i++;
-	while (src[res])
-		res++;
-	if (size <= i)
-		res += size;
-	else
-		res += i;
-	while (src[j] && (i + 1) < size)
+	if (size <= len1)
+		return (len2 + size);
+	while (len1 + i < size - 1 && src[i] != '\0')
 	{
-		dst[i] = src[j];
+		dst[len1 + i] = src[i];
 		i++;
-		j++;
 	}
-	dst[i] = '\0';
-	return (res);
+	dst[len1 + i] = '\0';
+	return (len1 + len2);
 }
 // #include <stdio.h>
 // #include <bsd/string.h>

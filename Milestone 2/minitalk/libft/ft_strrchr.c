@@ -5,11 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/19 15:14:44 by tolanini          #+#    #+#             */
-/*   Updated: 2024/11/25 15:23:27 by tolanini         ###   ########.fr       */
+/*   Created: 2024/11/17 18:47:06 by tolanini          #+#    #+#             */
+/*   Updated: 2025/03/18 15:58:41 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <string.h>
 #include "libft.h"
 
 char	*ft_strrchr(const char *s, int c)
