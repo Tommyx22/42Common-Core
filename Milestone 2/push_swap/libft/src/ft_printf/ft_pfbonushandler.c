@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 14:07:41 by tolanini          #+#    #+#             */
-/*   Updated: 2025/03/26 15:29:12 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/05/27 14:20:24 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ size_t	pf_handlebonus(t_pfflag flag)
 		ft_putstr_fd("0X", 1);
 	else if (flag.convert && !flag.zero)
 		ft_putstr_fd("0x", 1);
-	offset = flag.type != PF_STR && (flag.minus || (flag.zero && flag.wprec));
+	offset = (flag.type != PF_STR && (flag.minus || (flag.zero && flag.wprec)));
 	flag.reslen = ft_istrlen(flag.res) - offset;
 	if (flag.wprec && flag.prec <= flag.reslen && flag.type == PF_STR)
 		flag.reslen = flag.prec;

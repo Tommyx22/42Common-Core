@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 14:00:18 by tolanini          #+#    #+#             */
-/*   Updated: 2025/03/26 15:29:12 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/05/27 14:21:57 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static t_pfflag	pf_parseflag(t_pfflag flag)
 	flag.prec = -1;
 	flag.wminus = !!ft_strchr(flag.flag, '-');
 	flag.wplus = !!ft_strchr(flag.flag, '+');
-	flag.wspaces = !!ft_strchr(flag.flag, ' ') && !flag.wplus;
+	flag.wspaces = (!!ft_strchr(flag.flag, ' ') && !flag.wplus);
 	flag.isupper = ft_tolower(flag.flag[rawlen - 1]) != flag.flag[rawlen - 1];
 	flag.zero = false;
 	if (ft_strchr(flag.flag, '#'))
@@ -37,7 +37,7 @@ static t_pfflag	pf_parseflag(t_pfflag flag)
 	flag.wprec = flag.prec != -1;
 	if (ft_strchr(flag.flag, '0'))
 		flag.wzeros = !flag.wprec
-			&& !ft_isdigit(*(ft_strchr(flag.flag, '0') - 1));
+			(&& !ft_isdigit(*(ft_strchr(flag.flag, '0') - 1)));
 	return (flag);
 }
 

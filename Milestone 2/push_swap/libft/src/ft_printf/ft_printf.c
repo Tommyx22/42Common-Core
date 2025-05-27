@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 17:51:11 by tolanini          #+#    #+#             */
-/*   Updated: 2025/03/26 15:29:12 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/05/27 14:22:14 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ static size_t	pf_getres(va_list list, t_pfflag flag)
 	else
 		flag.res = ft_strdup(va_arg(list, char *));
 	flag.reslen = ft_strlen(flag.res);
-	flag.zero = flag.res && flag.res[0] == '0';
-	flag.minus = flag.res && flag.res[0] == '-';
+	flag.zero = (flag.res && flag.res[0] == '0');
+	flag.minus = (flag.res && flag.res[0] == '-');
 	return (pf_handlebonus(flag));
 }
 
