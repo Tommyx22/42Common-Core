@@ -1,0 +1,1 @@
+This project is about recreating a shell like bash with a lot of less feature, this project is only 80/100 score
