@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 15:53:02 by tolanini          #+#    #+#             */
-/*   Updated: 2025/06/03 16:19:07 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/06/11 15:00:24 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	main(int ac, char **av)
 	{
 		parse(&table, av); //DONE
 		init(&table); //DONE
-		start_sim(&table); //TODO
+		start_sim(&table); //DONE
 		free_all(&table); //TODO
 	}
 	else

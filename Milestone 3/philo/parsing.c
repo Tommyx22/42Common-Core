@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 16:01:05 by tolanini          #+#    #+#             */
-/*   Updated: 2025/06/03 15:52:37 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/06/11 13:51:08 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static long	ft_atol(const char *str)
 	num = 0;
 	str = valid_input(str);
 
-	while (*str >= '0' && *str <= "9")
+	while (*str >= '0' && *str <= '9')
 		num = (num * 10) + (*str++ - 48);
 	if (num > INT_MAX)
 		exit_error("Exceeded INT_MAX limit");
