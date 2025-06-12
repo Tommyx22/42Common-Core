@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 15:55:18 by tolanini          #+#    #+#             */
-/*   Updated: 2025/06/01 16:02:04 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/06/12 17:35:36 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,12 @@ void	free_all(t_table *table)
 		free(table->forks);
 	}
 	if (table->philos)
+	{
+		i = -1;
+		while (++i < table->philo_number)
+			pthread_mutex_destroy(&table->philos[i].meal_mtx);
 		free(table->philos);
+	}
+	pthread_mutex_destroy(&table->end_mtx);
+	pthread_mutex_destroy(&table->msg);
 }

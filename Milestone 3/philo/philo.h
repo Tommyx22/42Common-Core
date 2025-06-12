@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 15:52:46 by tolanini          #+#    #+#             */
-/*   Updated: 2025/06/12 16:06:33 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/06/12 18:34:58 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ typedef struct s_philo
 {
 	int			id;
 	int			meal_count;
-	bool		full;
 	long		last_meal_time;
+	t_mtx		meal_mtx;
 	t_fork		*left_fork;
 	t_fork		*right_fork;
 	pthread_t	thread_id;
@@ -49,6 +49,8 @@ struct s_table
 	long	limit_of_meals;
 	long	start_time;
 	bool	end;
+	t_mtx	end_mtx;
+	t_mtx	msg;
 	t_fork	*forks;
 	t_philo	*philos;
 };

@@ -6,43 +6,63 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 16:19:20 by tolanini          #+#    #+#             */
-/*   Updated: 2025/06/12 16:07:24 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/06/12 18:46:28 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long	get_time(void)
+static long	get_time(void)
 {
 	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
-	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+	return (tv.tv_sec * 1000000 + tv.tv_usec);
+}
+
+static void safe_printf(char *str, t_philo *philo)
+{
+	pthread_mutex_lock(&philo->table->end_mtx);
+	if (philo->table->end == true)
+	{
+		pthread_mutex_unlock(&philo->table->end_mtx);
+		return ;
+	}
+	pthread_mutex_lock(&philo->table->msg);
+	printf("%ld %d %s", (get_time() - philo->table->start_time) / 1000, philo->id, str);
+	pthread_mutex_unlock(&philo->table->msg);
+	pthread_mutex_unlock(&philo->table->end_mtx);
 }
 
 void	*philo_routine(void *arg)
 {
-	t_philo	*philo;
-
-	philo = (t_philo *)arg;
+	t_philo *const	philo = (t_philo *)arg;
+	
+	pthread_mutex_lock(&philo->table->end_mtx);
 	while (!philo->table->end)
 	{
+		pthread_mutex_unlock(&philo->table->end_mtx);
 		pthread_mutex_lock(&philo->left_fork->fork_mutex);
-		printf("%ld %d has taken a fork\n", get_time() - philo->table->start_time, philo->id);
+		safe_printf("has taken a fork\n", philo);
 		pthread_mutex_lock(&philo->right_fork->fork_mutex);
-		printf("%ld %d has taken a fork\n", get_time() - philo->table->start_time, philo->id);
-		printf("%ld %d is eating\n", get_time() - philo->table->start_time, philo->id);
+		safe_printf("has taken a fork\n", philo);
+		safe_printf("is eating\n", philo);
+		pthread_mutex_lock(&philo->meal_mtx);
 		philo->last_meal_time = get_time();
-		usleep(philo->table->time_to_eat);
 		philo->meal_count++;
+		pthread_mutex_unlock(&philo->meal_mtx);
+		usleep(philo->table->time_to_eat);
 		pthread_mutex_unlock(&philo->left_fork->fork_mutex);
 		pthread_mutex_unlock(&philo->right_fork->fork_mutex);
-		printf("%ld %d is sleeping\n", get_time() - philo->table->start_time, philo->id);
+		safe_printf("is sleeping\n", philo);
 		usleep(philo->table->time_to_sleep);
-		printf("%ld %d is thinking\n", get_time() - philo->table->start_time, philo->id);
-		if (philo->table->limit_of_meals > 0 && philo->meal_count >= philo->table->limit_of_meals)
-			break;
+		safe_printf("is thinking\n", philo);
+		pthread_mutex_lock(&philo->table->end_mtx);
+		if (philo->table->limit_of_meals > 0
+			&& philo->meal_count >= philo->table->limit_of_meals)
+			break ;
 	}
+	pthread_mutex_unlock(&philo->table->end_mtx);
 	return (NULL);
 }
 
@@ -51,23 +71,38 @@ void	*monitor(void *arg)
 	t_table	*table;
 	int		i;
 	long	now;
-
+	int		philos_full;
+	
 	table = (t_table *)arg;
+	pthread_mutex_lock(&table->end_mtx);
 	while (!table->end)
 	{
+		pthread_mutex_unlock(&table->end_mtx);
 		i = -1;
+		philos_full = 0;
 		while (++i < table->philo_number)
 		{
 			now = get_time();
-			if ((now - table->philos[i].last_meal_time) > table->time_to_die)
+			pthread_mutex_lock(&table->philos[i].meal_mtx);
+			if (table->philos[i].meal_count == table->limit_of_meals)
+				philos_full++;
+			else if ((now - table->philos[i].last_meal_time) > table->time_to_die)
 			{
-				printf("%ld %d died\n", now - table->start_time, table->philos[i].id);
+				safe_printf("died\n", &table->philos[i]);
+				pthread_mutex_lock(&table->end_mtx);
 				table->end = true;
+				pthread_mutex_unlock(&table->end_mtx);
+				pthread_mutex_unlock(&table->philos[i].meal_mtx);
 				return (NULL);
 			}
+			pthread_mutex_unlock(&table->philos[i].meal_mtx);
 		}
 		usleep(1000);
+		if (table->philo_number == philos_full)
+			return (NULL);
+		pthread_mutex_lock(&table->end_mtx);
 	}
+	pthread_mutex_unlock(&table->end_mtx);
 	return (NULL);
 }
 

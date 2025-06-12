@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 15:28:42 by tolanini          #+#    #+#             */
-/*   Updated: 2025/06/03 16:45:04 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/06/12 18:35:25 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ static void	philo_init(t_table *table)
 	{
 		philo = &table->philos[i];
 		philo->id = i + 1;
-		philo->full = false;
 		philo->meal_count = 0;
 		philo->table = table;
 		philo->left_fork = &table->forks[(i + 1) % table->philo_number];
@@ -42,6 +41,8 @@ void	init(t_table *table)
 
 	i = -1;
 	table->end = false;
+	if (pthread_mutex_init(&table->end_mtx, NULL))
+			exit_error("mutex init failed");
 	table->philos = malloc(sizeof(t_philo) * table->philo_number);
 	if (table->philos == NULL)
 		exit_error("error with malloc");
@@ -52,7 +53,11 @@ void	init(t_table *table)
 	{
 		if (pthread_mutex_init(&table->forks[i].fork_mutex, NULL))
 			exit_error("mutex init failed");
+		if (pthread_mutex_init(&table->philos[i].meal_mtx, NULL))
+			exit_error("mutex init failed");
 		table->forks[i].fork_id = i;
 	}
+	if (pthread_mutex_init(&table->msg, NULL))
+		exit_error("mutex init failed");
 	philo_init(table);
 }
