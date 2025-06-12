@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 16:19:20 by tolanini          #+#    #+#             */
-/*   Updated: 2025/06/11 23:35:12 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/06/12 16:07:24 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	*philo_routine(void *arg)
 {
 	t_philo	*philo;
 
-	*philo = (t_philo *)arg;
+	philo = (t_philo *)arg;
 	while (!philo->table->end)
 	{
 		pthread_mutex_lock(&philo->left_fork->fork_mutex);
@@ -43,7 +43,7 @@ void	*philo_routine(void *arg)
 		if (philo->table->limit_of_meals > 0 && philo->meal_count >= philo->table->limit_of_meals)
 			break;
 	}
-	return ();
+	return (NULL);
 }
 
 void	*monitor(void *arg)
@@ -63,12 +63,12 @@ void	*monitor(void *arg)
 			{
 				printf("%ld %d died\n", now - table->start_time, table->philos[i].id);
 				table->end = true;
-				return ();
+				return (NULL);
 			}
 		}
 		usleep(1000);
 	}
-	return ();
+	return (NULL);
 }
 
 void	start_sim(t_table *table)

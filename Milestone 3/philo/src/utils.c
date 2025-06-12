@@ -17,3 +17,18 @@ void	exit_error(const char *msg)
 	printf("%s\n", msg);
 	exit(EXIT_FAILURE);
 }
+
+void	free_all(t_table *table)
+{
+	int	i;
+
+	if (table->forks)
+	{
+		i = -1;
+		while (++i < table->philo_number)
+			pthread_mutex_destroy(&table->forks[i].fork_mutex);
+		free(table->forks);
+	}
+	if (table->philos)
+		free(table->philos);
+}

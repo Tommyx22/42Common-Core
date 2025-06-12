@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 15:52:46 by tolanini          #+#    #+#             */
-/*   Updated: 2025/06/11 22:33:28 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/06/12 16:06:33 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ struct s_table
 	bool	end;
 	t_fork	*forks;
 	t_philo	*philos;
-}	t_table;
+};
 
 // utils
 void	exit_error(const char *msg);

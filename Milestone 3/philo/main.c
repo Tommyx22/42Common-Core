@@ -17,10 +17,10 @@ int	main(int ac, char **av)
 	t_table table;
 	if (ac == 5 || ac == 6)
 	{
-		parse(&table, av); //DONE
-		init(&table); //DONE
-		start_sim(&table); //DONE
-		free_all(&table); //TODO
+		parse(&table, av);
+		init(&table);
+		start_sim(&table);
+		free_all(&table);
 	}
 	else
 	{
