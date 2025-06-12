@@ -34,7 +34,6 @@ static void	philo_init(t_table *table)
 	}
 }
 
-
 void	init(t_table *table)
 {
 	int	i;
@@ -42,7 +41,7 @@ void	init(t_table *table)
 	i = -1;
 	table->end = false;
 	if (pthread_mutex_init(&table->end_mtx, NULL))
-			exit_error("mutex init failed");
+		exit_error("mutex init failed");
 	table->philos = malloc(sizeof(t_philo) * table->philo_number);
 	if (table->philos == NULL)
 		exit_error("error with malloc");

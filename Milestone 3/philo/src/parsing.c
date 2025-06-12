@@ -14,11 +14,10 @@
 
 static const char	*valid_input(const char *str)
 {
-	int	len;
-	const char *num;
-	
+	const char	*num;
+	int			len;
+
 	len = 0;
-	
 	while ((*str >= 9 && *str <= 13) || *str == 32)
 		++str;
 	if (*str == '+')
@@ -38,10 +37,9 @@ static const char	*valid_input(const char *str)
 static long	ft_atol(const char *str)
 {
 	long	num;
-	
+
 	num = 0;
 	str = valid_input(str);
-
 	while (*str >= '0' && *str <= '9')
 		num = (num * 10) + (*str++ - 48);
 	if (num > INT_MAX)
@@ -63,4 +61,4 @@ void	parse(t_table *table, char **av)
 		table->limit_of_meals = ft_atol(av[5]);
 	else
 		table->limit_of_meals = -1;
-}	
+}

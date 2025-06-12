@@ -18,6 +18,14 @@ void	exit_error(const char *msg)
 	exit(EXIT_FAILURE);
 }
 
+long	get_time(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000000 + tv.tv_usec);
+}
+
 void	free_all(t_table *table)
 {
 	int	i;

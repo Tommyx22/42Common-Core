@@ -12,15 +12,7 @@
 
 #include "philo.h"
 
-static long	get_time(void)
-{
-	struct timeval	tv;
-
-	gettimeofday(&tv, NULL);
-	return (tv.tv_sec * 1000000 + tv.tv_usec);
-}
-
-static void safe_printf(char *str, t_philo *philo)
+static void	safe_printf(char *str, t_philo *philo)
 {
 	pthread_mutex_lock(&philo->table->end_mtx);
 	if (philo->table->end == true)
@@ -29,7 +21,8 @@ static void safe_printf(char *str, t_philo *philo)
 		return ;
 	}
 	pthread_mutex_lock(&philo->table->msg);
-	printf("%ld %d %s", (get_time() - philo->table->start_time) / 1000, philo->id, str);
+	printf("%ld %d %s",
+		(get_time() - philo->table->start_time) / 1000, philo->id, str);
 	pthread_mutex_unlock(&philo->table->msg);
 	pthread_mutex_unlock(&philo->table->end_mtx);
 }
@@ -37,7 +30,7 @@ static void safe_printf(char *str, t_philo *philo)
 void	*philo_routine(void *arg)
 {
 	t_philo *const	philo = (t_philo *)arg;
-	
+
 	pthread_mutex_lock(&philo->table->end_mtx);
 	while (!philo->table->end)
 	{
@@ -68,12 +61,11 @@ void	*philo_routine(void *arg)
 
 void	*monitor(void *arg)
 {
-	t_table	*table;
-	int		i;
-	long	now;
-	int		philos_full;
-	
-	table = (t_table *)arg;
+	t_table *const	table = (t_table *)arg;
+	int				i;
+	long			now;
+	int				philos_full;
+
 	pthread_mutex_lock(&table->end_mtx);
 	while (!table->end)
 	{
@@ -86,7 +78,8 @@ void	*monitor(void *arg)
 			pthread_mutex_lock(&table->philos[i].meal_mtx);
 			if (table->philos[i].meal_count == table->limit_of_meals)
 				philos_full++;
-			else if ((now - table->philos[i].last_meal_time) > table->time_to_die)
+			else if ((now - table->philos[i].last_meal_time)
+				> table->time_to_die)
 			{
 				safe_printf("died\n", &table->philos[i]);
 				pthread_mutex_lock(&table->end_mtx);
@@ -113,31 +106,22 @@ void	start_sim(t_table *table)
 
 	if (table->limit_of_meals == 0)
 		return ;
-
 	table->start_time = get_time();
-
 	i = -1;
 	while (++i < table->philo_number)
 		table->philos[i].last_meal_time = table->start_time;
-
-	// Avvia i filosofi
 	i = -1;
 	while (++i < table->philo_number)
 	{
-		if (pthread_create(&table->philos[i].thread_id, NULL, philo_routine, &table->philos[i]) != 0)
+		if (pthread_create(&table->philos[i].thread_id,
+				NULL, philo_routine, &table->philos[i]) != 0)
 			exit_error("pthread_create failed");
-		usleep(100); // leggero delay
+		usleep(100);
 	}
-
-	// Avvia il monitor
 	if (pthread_create(&monitor_thread, NULL, monitor, table) != 0)
 		exit_error("monitor thread create failed");
-
-	// Attendi la fine dei filosofi
 	i = -1;
 	while (++i < table->philo_number)
 		pthread_join(table->philos[i].thread_id, NULL);
-
-	// Attendi il monitor
 	pthread_join(monitor_thread, NULL);
 }

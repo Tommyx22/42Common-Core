@@ -69,3 +69,6 @@ void	start_sim(t_table *table);
 
 // free
 void	free_all(t_table *table);
+
+// time function
+long	get_time(void);
