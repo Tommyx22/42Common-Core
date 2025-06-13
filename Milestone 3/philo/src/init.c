@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 15:28:42 by tolanini          #+#    #+#             */
-/*   Updated: 2025/06/12 18:35:25 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/06/13 16:57:24 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ static void	philo_init(t_table *table)
 		philo->id = i + 1;
 		philo->meal_count = 0;
 		philo->table = table;
-		philo->left_fork = &table->forks[(i + 1) % table->philo_number];
-		philo->right_fork = &table->forks[i];
-		if (philo->id % 2 == 0)
+		philo->left_fork = &table->forks[i];
+		philo->right_fork = &table->forks[(i + 1) % table->philo_number];
+		if (i == table->philo_number - 1)
 		{
-			philo->left_fork = &table->forks[i];
-			philo->right_fork = &table->forks[(i + 1) % table->philo_number];
+			philo->left_fork = &table->forks[(i + 1) % table->philo_number];
+			philo->right_fork = &table->forks[i];
 		}
 	}
 }

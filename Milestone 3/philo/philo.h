@@ -6,17 +6,20 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 15:52:46 by tolanini          #+#    #+#             */
-/*   Updated: 2025/06/12 18:34:58 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/06/13 16:56:43 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <stdbool.h>
-#include <sys/time.h>
-#include <limits.h>
+#ifndef PHILO_H
+# define PHILO_H
+
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <pthread.h>
+# include <stdbool.h>
+# include <sys/time.h>
+# include <limits.h>
 
 typedef pthread_mutex_t	t_mtx;
 
@@ -72,3 +75,5 @@ void	free_all(t_table *table);
 
 // time function
 long	get_time(void);
+
+#endif

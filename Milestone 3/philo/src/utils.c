@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 15:55:18 by tolanini          #+#    #+#             */
-/*   Updated: 2025/06/12 17:35:36 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/06/13 15:45:00 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ long	get_time(void)
 	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
-	return (tv.tv_sec * 1000000 + tv.tv_usec);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
 void	free_all(t_table *table)
