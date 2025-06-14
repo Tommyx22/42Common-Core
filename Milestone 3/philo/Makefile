@@ -18,12 +18,14 @@ SRC      = main.c \
            $(SRCDIR)exec.c \
            $(SRCDIR)init.c \
            $(SRCDIR)parsing.c \
-           $(SRCDIR)utils.c
+           $(SRCDIR)utils.c \
+		   $(SRCDIR)exec_utils.c 
 OBJ      = $(OBJDIR)main.o \
            $(OBJDIR)exec.o \
            $(OBJDIR)init.o \
            $(OBJDIR)parsing.o \
-           $(OBJDIR)utils.o
+           $(OBJDIR)utils.o \
+		   $(OBJDIR)exec_utils.o
 CC       = cc
 CFLAGS   = -Wall -Wextra -Werror -pthread
 CFINC    = -I$(INCLUDES)

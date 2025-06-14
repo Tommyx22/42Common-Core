@@ -76,4 +76,13 @@ void	free_all(t_table *table);
 // time function
 long	get_time(void);
 
+// safe printf with mutex
+void	safe_printf(char *str, t_philo *philo);
+
+// smart sleep basically usleep but better
+void	smart_sleep(long ms, t_table *table);
+
+// exec utils 
+void	philo_routine_utils(t_philo *philo);
+
 #endif

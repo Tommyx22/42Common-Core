@@ -12,41 +12,6 @@
 
 #include "philo.h"
 
-static void	safe_printf(char *str, t_philo *philo)
-{
-	long	current_time;
-
-	pthread_mutex_lock(&philo->table->end_mtx);
-	if (philo->table->end)
-	{
-		pthread_mutex_unlock(&philo->table->end_mtx);
-		return ;
-	}
-	current_time = get_time() - philo->table->start_time;
-	pthread_mutex_lock(&philo->table->msg);
-	printf("%ld %d %s", current_time, philo->id, str);
-	pthread_mutex_unlock(&philo->table->msg);
-	pthread_mutex_unlock(&philo->table->end_mtx);
-}
-
-static void	smart_sleep(long ms, t_table *table)
-{
-	long	start;
-
-	start = get_time();
-	while (get_time() - start < ms)
-	{
-		usleep(100);
-		pthread_mutex_lock(&table->end_mtx);
-		if (table->end)
-		{
-			pthread_mutex_unlock(&table->end_mtx);
-			break ;
-		}
-		pthread_mutex_unlock(&table->end_mtx);
-	}
-}
-
 void	*philo_routine(void *arg)
 {
 	t_philo *const	philo = (t_philo *)arg;
@@ -62,18 +27,7 @@ void	*philo_routine(void *arg)
 			break ;
 		}
 		pthread_mutex_unlock(&philo->table->end_mtx);
-		pthread_mutex_lock(&philo->left_fork->fork_mutex);
-		safe_printf("has taken a fork\n", philo);
-		pthread_mutex_lock(&philo->right_fork->fork_mutex);
-		safe_printf("has taken a fork\n", philo);
-		safe_printf("is eating\n", philo);
-		pthread_mutex_lock(&philo->meal_mtx);
-		philo->last_meal_time = get_time();
-		philo->meal_count++;
-		pthread_mutex_unlock(&philo->meal_mtx);
-		smart_sleep(philo->table->time_to_eat, philo->table);
-		pthread_mutex_unlock(&philo->right_fork->fork_mutex);
-		pthread_mutex_unlock(&philo->left_fork->fork_mutex);
+		philo_routine_utils(philo);
 		if (philo->table->limit_of_meals > 0
 			&& philo->meal_count >= philo->table->limit_of_meals)
 			break ;
@@ -82,6 +36,35 @@ void	*philo_routine(void *arg)
 		safe_printf("is thinking\n", philo);
 	}
 	return (NULL);
+}
+
+static int	monitor_utils(t_table *table, int i, long now, int *full_count)
+{
+	pthread_mutex_lock(&table->philos[i].meal_mtx);
+	if (table->limit_of_meals > 0
+		&& table->philos[i].meal_count >= table->limit_of_meals)
+		(*full_count)++;
+	else if (now - table->philos[i].last_meal_time > table->time_to_die)
+	{
+		safe_printf("died\n", &table->philos[i]);
+		pthread_mutex_lock(&table->end_mtx);
+		table->end = true;
+		pthread_mutex_unlock(&table->end_mtx);
+		pthread_mutex_unlock(&table->philos[i].meal_mtx);
+		return (1);
+	}
+	pthread_mutex_unlock(&table->philos[i].meal_mtx);
+	return (0);
+}
+
+void	monitor_init(int *full_count, bool *should_exit,
+	long *now, t_table *table)
+{
+	*full_count = 0;
+	*now = get_time();
+	pthread_mutex_lock(&table->end_mtx);
+	*should_exit = table->end;
+	pthread_mutex_unlock(&table->end_mtx);
 }
 
 void	*monitor(void *arg)
@@ -94,32 +77,13 @@ void	*monitor(void *arg)
 
 	while (1)
 	{
-		full_count = 0;
-		now = get_time();
-		pthread_mutex_lock(&table->end_mtx);
-		should_exit = table->end;
-		pthread_mutex_unlock(&table->end_mtx);
+		monitor_init(&full_count, &should_exit, &now, table);
 		if (should_exit)
 			break ;
-		i = 0;
-		while (i < table->philo_number)
-		{
-			pthread_mutex_lock(&table->philos[i].meal_mtx);
-			if (table->limit_of_meals > 0
-				&& table->philos[i].meal_count >= table->limit_of_meals)
-				full_count++;
-			else if (now - table->philos[i].last_meal_time > table->time_to_die)
-			{
-				safe_printf("died\n", &table->philos[i]);
-				pthread_mutex_lock(&table->end_mtx);
-				table->end = true;
-				pthread_mutex_unlock(&table->end_mtx);
-				pthread_mutex_unlock(&table->philos[i].meal_mtx);
+		i = -1;
+		while (++i < table->philo_number)
+			if (monitor_utils(table, i, now, &full_count))
 				return (NULL);
-			}
-			pthread_mutex_unlock(&table->philos[i].meal_mtx);
-			i++;
-		}
 		if (full_count == table->philo_number)
 		{
 			pthread_mutex_lock(&table->end_mtx);

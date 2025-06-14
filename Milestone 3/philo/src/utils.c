@@ -47,3 +47,38 @@ void	free_all(t_table *table)
 	pthread_mutex_destroy(&table->end_mtx);
 	pthread_mutex_destroy(&table->msg);
 }
+
+void	safe_printf(char *str, t_philo *philo)
+{
+	long	current_time;
+
+	pthread_mutex_lock(&philo->table->end_mtx);
+	if (philo->table->end)
+	{
+		pthread_mutex_unlock(&philo->table->end_mtx);
+		return ;
+	}
+	current_time = get_time() - philo->table->start_time;
+	pthread_mutex_lock(&philo->table->msg);
+	printf("%ld %d %s", current_time, philo->id, str);
+	pthread_mutex_unlock(&philo->table->msg);
+	pthread_mutex_unlock(&philo->table->end_mtx);
+}
+
+void	smart_sleep(long ms, t_table *table)
+{
+	long	start;
+
+	start = get_time();
+	while (get_time() - start < ms)
+	{
+		usleep(100);
+		pthread_mutex_lock(&table->end_mtx);
+		if (table->end)
+		{
+			pthread_mutex_unlock(&table->end_mtx);
+			break ;
+		}
+		pthread_mutex_unlock(&table->end_mtx);
+	}
+}
