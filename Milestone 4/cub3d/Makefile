@@ -6,7 +6,7 @@
 #    By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/08 18:46:54 by tolanini          #+#    #+#              #
-#    Updated: 2025/07/08 18:53:46 by tolanini         ###   ########.fr        #
+#    Updated: 2025/07/10 16:01:54 by tolanini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,12 +17,13 @@ LIBFT   = libft.a
 LFT_PATH    = ./libft/
 MLX_PATH    = ./mlx_linux/
 INCLUDES    = ./include
-SRCDIR      = ./srcs/
+SRCDIR      = ./src/
 OBJDIR      = objs/
 
-SRC     =   $(SRCDIR)main.c
-
-OBJ     = $(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
+# Main file is in root, others in src/
+ROOT_SRC = main.c
+SRC     = $(wildcard $(SRCDIR)*.c)
+OBJ     = $(ROOT_SRC:%.c=$(OBJDIR)/%.o) $(SRC:$(SRCDIR)%.c=$(OBJDIR)/%.o)
 
 CC      = cc
 CFLAGS  = -Wall -Wextra -Werror
@@ -38,11 +39,17 @@ $(NAME): $(OBJ) $(LIBFT) $(MLX)
 	@clear
 	@echo "$(NAME) created!"
 
-$(OBJDIR)%.o: $(SRCDIR)%.c
+# Rule for root source files
+$(OBJDIR)/%.o: %.c
 	@mkdir -p $(OBJDIR)
 	@echo "Compiling $<..."
 	@$(CC) $(CFLAGS) -g -c $(CFINC) $< -o $@
-	@echo "$< compiled"
+
+# Rule for src/ source files
+$(OBJDIR)/%.o: $(SRCDIR)%.c
+	@mkdir -p $(OBJDIR)
+	@echo "Compiling $<..."
+	@$(CC) $(CFLAGS) -g -c $(CFINC) $< -o $@
 
 $(MLX):
 	@make -C $(MLX_PATH)
