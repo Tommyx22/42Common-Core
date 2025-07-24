@@ -38,4 +38,62 @@ typedef struct s_vars
 	int		width;
 }	t_vars;
 
+typedef struct s_map
+{
+	char	**grid;
+	int		width;
+	int		height;
+	int		player_x;
+	int		player_y;
+	char	player_dir;
+}	t_map;
+
+typedef struct s_player
+{
+	double	x;
+	double	y;
+	double	dir_x;
+	double	dir_y;
+	double	plane_x;
+	double	plane_y;
+}	t_player;
+
+typedef struct s_ray
+{
+	double	ray_dir_x;
+	double	ray_dir_y;
+	double	side_dist_x;
+	double	side_dist_y;
+	double	delta_dist_x;
+	double	delta_dist_y;
+	int		map_x;
+	int		map_y;
+	int		step_x;
+	int		step_y;
+	int		hit;
+	int		side;
+	double	perp_wall_dist;
+}	t_ray;
+
+typedef struct s_game
+{
+	t_vars		mlx;
+	t_map		map;
+	t_player	player;
+	void		*img;
+	char		*addr;
+	int			bpp;
+	int			line_len;
+	int			endian;
+}	t_game;
+
+// Engine functions
+void		my_mlx_pixel_put(t_game *game, int x, int y, int color);
+void		cast_ray(t_game *game, t_ray *ray, int x);
+void		draw_column(t_game *game, int x, t_ray *ray);
+int			render_frame(t_game *game);
+
+// Player functions
+void		init_player(t_game *game);
+
 #endif

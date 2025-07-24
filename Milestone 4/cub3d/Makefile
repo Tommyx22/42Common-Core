@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME    = Cub3d.a
+NAME    = cub3d
 MLX     = libmlx_Linux.a
 LIBFT   = libft.a
 
@@ -20,58 +20,50 @@ INCLUDES    = ./include
 SRCDIR      = ./src/
 OBJDIR      = objs/
 
-# Main file is in root, others in src/
-ROOT_SRC = main.c
-SRC     = $(wildcard $(SRCDIR)*.c)
-OBJ     = $(ROOT_SRC:%.c=$(OBJDIR)/%.o) $(SRC:$(SRCDIR)%.c=$(OBJDIR)/%.o)
+SRC     = main.c \
+          $(wildcard $(SRCDIR)*.c)
+OBJ     = $(addprefix $(OBJDIR)/, $(notdir $(SRC:.c=.o)))
 
-CC      = cc
-CFLAGS  = -Wall -Wextra -Werror
-MLX_LIBS= -lm -lbsd -lmlx -lXext -lX11
-CFINC   = -I$(INCLUDES)
+CC      = gcc
+CFLAGS  = -Wall -Wextra -Werror -g
+MLX_LIBS= -L$(MLX_PATH) -lmlx -L/usr/lib -lXext -lX11 -lm
+LFT_LIBS= -L$(LFT_PATH) -lft
+CFINC   = -I$(INCLUDES) -I$(MLX_PATH)
 RM      = rm -f
 
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT) $(MLX)
-	@echo "Generating $(NAME) executable..."
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) -L$(LFT_PATH) -L$(MLX_PATH) -lft $(MLX_LIBS) -g
-	@clear
-	@echo "$(NAME) created!"
+	@echo "Linking $(NAME)..."
+	$(CC) $(CFLAGS) $(OBJ) $(LFT_LIBS) $(MLX_LIBS) -o $(NAME)
+	@echo "$(NAME) successfully compiled!"
 
-# Rule for root source files
 $(OBJDIR)/%.o: %.c
 	@mkdir -p $(OBJDIR)
 	@echo "Compiling $<..."
-	@$(CC) $(CFLAGS) -g -c $(CFINC) $< -o $@
+	$(CC) $(CFLAGS) $(CFINC) -c $< -o $@
 
-# Rule for src/ source files
 $(OBJDIR)/%.o: $(SRCDIR)%.c
 	@mkdir -p $(OBJDIR)
 	@echo "Compiling $<..."
-	@$(CC) $(CFLAGS) -g -c $(CFINC) $< -o $@
+	$(CC) $(CFLAGS) $(CFINC) -c $< -o $@
 
 $(MLX):
-	@make -C $(MLX_PATH)
+	@make -s -C $(MLX_PATH)
 
 $(LIBFT):
-	@make -C $(LFT_PATH)
+	@make -s -C $(LFT_PATH)
 
 clean:
-	@echo "Cleaning object files..."
-	@$(RM) -rf $(OBJDIR)
-	@clear
-	@echo "Objects deleted"
+	@echo "Removing object files..."
+	$(RM) -r $(OBJDIR)
+	@make clean -C $(LFT_PATH)
 
 fclean: clean
-	@echo "Cleaning $(NAME) and libraries..."
-	@$(RM) $(NAME)
+	@echo "Removing $(NAME) and libraries..."
+	$(RM) $(NAME)
 	@make fclean -C $(LFT_PATH)
-	@make clean -C $(MLX_PATH)
-	@clear
-	@echo "Library and $(NAME) deleted!"
 
 re: fclean all
-	@echo "Rebuilding everything..."
 
-.PHONY: clean fclean all re
+.PHONY: all clean fclean re
