@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:41:53 by tolanini          #+#    #+#             */
-/*   Updated: 2025/07/10 16:08:53 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/10/27 23:20:59 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,16 @@
 # include "../mlx_linux/mlx.h"
 # include "../libft/libft.h"
 
-# define WINDOW_WIDTH		1200
-# define WINDOW_HEIGHT		900
+# define WINDOW_WIDTH		1920
+# define WINDOW_HEIGHT		1080
 
-# define KEY_ESC			65307
-# define KEY_W				119
-# define KEY_A				97
-# define KEY_S				115
-# define KEY_D				100
+# define KEY_ESC		65307
+# define KEY_W		119
+# define KEY_A		97
+# define KEY_S		115
+# define KEY_D		100
+# define KEY_LEFT	65361
+# define KEY_RIGHT	65363
 
 typedef struct s_vars
 {
@@ -95,5 +97,11 @@ int			render_frame(t_game *game);
 
 // Player functions
 void		init_player(t_game *game);
+
+//key handling functions
+int		key_press(int keycode, t_game *game);
+int		close_game(t_game *game);
+void	move_player(t_game *game, double move_x, double move_y);
+void	rotate_player(t_game *game, double rot_speed);
 
 #endif

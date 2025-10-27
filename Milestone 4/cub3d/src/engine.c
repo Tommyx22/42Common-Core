@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 17:23:46 by tolanini          #+#    #+#             */
-/*   Updated: 2025/07/29 18:29:55 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/10/27 14:44:38 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,24 @@ int	render_frame(t_game *game)
 {
 	t_ray	ray;
 	int		x;
+	int		y;
 	double	camera_x;
-
+	
+	y = 0;
+	while (y < WINDOW_HEIGHT)
+	{
+		x = 0;
+		while (x < WINDOW_WIDTH)
+		{
+			if (y < WINDOW_HEIGHT / 2)
+				my_mlx_pixel_put(game, x, y, 0x87CEEB);
+			else
+				my_mlx_pixel_put(game, x, y, 0x00FF00);
+			x++;
+		}
+		y++;
+	}
+	
 	x = 0;
 	while (x < WINDOW_WIDTH)
 	{

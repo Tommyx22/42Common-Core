@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:52:20 by tolanini          #+#    #+#             */
-/*   Updated: 2025/07/29 18:22:21 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/10/27 15:17:49 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 void init_map(t_game *game)
 {
 	// Inizializza la struttura della mappa
-	game->map.width = 27;  // Larghezza massima delle righe
-	game->map.height = 13; // Numero di righe
-	game->map.player_x = 22.5;
-	game->map.player_y = 11.5;
-	game->map.player_dir = 'N';
+	game->map.width = 6;
+	game->map.height = 5;
+	game->map.player_x = 4;  // Position of 'N'
+	game->map.player_y = 2;
+	game->map.player_dir = 'W';
 
 	// Alloca memoria per la griglia
 	game->map.grid = (char **)ft_calloc(game->map.height + 1, sizeof(char *));
@@ -29,20 +29,11 @@ void init_map(t_game *game)
 
 	// Mappa ESATTAMENTE come fornita, con spazi preservati
 	char *fixed_map[] = {
-		"        1111111111111111111111111",
-		"        1000000000110000000000001",
-		"        1011000001110000000000001",
-		"        1001000000000000000000001",
-		"111111111011000001110000000000001",
-		"100000000011000001110111111111111",
-		"11110111111111011100000010001",
-		"11110111111111011101010010001",
-		"11000000110101011100000010001",
-		"10000000000000001100000010001",
-		"10000000000000001101010010001",
-		"11000001110101011111011110N0111",
-		"11110111 1110101 101111010001",
-		"11111111 1111111 111111111111"
+		"111111",
+		"100001",
+		"1000W1",
+		"100001",
+		"111111"
 	};
 
 	// Copia la mappa preservando gli spazi
@@ -74,7 +65,9 @@ int main(int ac, char **av)
     game.addr = mlx_get_data_addr(game.img, &game.bpp, &game.line_len,
 			&game.endian);
     init_player(&game);
-    mlx_loop_hook(game.mlx.mlx, render_frame, &game);
+	mlx_hook(game.mlx.win, 2, 1L<<0, key_press, &game);
+    mlx_hook(game.mlx.win, 17, 0, close_game, &game);
+	mlx_loop_hook(game.mlx.mlx, render_frame, &game);
     mlx_loop(game.mlx.mlx);
     return (0);
 }

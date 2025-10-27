@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 17:31:24 by tolanini          #+#    #+#             */
-/*   Updated: 2025/07/24 18:18:43 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/10/27 14:38:34 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,22 @@ void	init_player(t_game *game)
 	game->player.y = game->map.player_y + 0.5;
 	if (game->map.player_dir == 'N')
 	{
-		init_player_direction(&game->player, -1, 0);
-		init_player_plane(&game->player, 0, 0.66);
+		init_player_direction(&game->player, 0, -1);
+		init_player_plane(&game->player, 0.66, 0);
 	}
 	else if (game->map.player_dir == 'S')
 	{
-		init_player_direction(&game->player, 1, 0);
-		init_player_plane(&game->player, 0, -0.66);
+		init_player_direction(&game->player, 0, 1);
+		init_player_plane(&game->player, -0.66, 0);
 	}
 	else if (game->map.player_dir == 'E')
 	{
-		init_player_direction(&game->player, 0, 1);
-		init_player_plane(&game->player, 0.66, 0);
+		init_player_direction(&game->player, 1, 0);
+		init_player_plane(&game->player, 0, 0.66);
 	}
 	else if (game->map.player_dir == 'W')
 	{
-		init_player_direction(&game->player, 0, -1);
-		init_player_plane(&game->player, -0.66, 0);
+		init_player_direction(&game->player, -1, 0);
+		init_player_plane(&game->player, 0, -0.66);
 	}
 }
