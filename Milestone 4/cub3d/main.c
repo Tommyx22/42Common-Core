@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:52:20 by tolanini          #+#    #+#             */
-/*   Updated: 2025/10/27 15:17:49 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/10/28 14:44:21 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,15 @@ void init_map(t_game *game)
 	}
 }
 
+int load_textures(t_game *game)
+{
+    if (!load_texture(game, &game->wall_tex, "textures/wall.xpm"))
+        return (0);
+    if (!load_texture(game, &game->floor_tex, "textures/floor.xpm"))
+        return (0);
+    return (1);
+}
+
 int main(int ac, char **av)
 {
     t_game game;
@@ -64,6 +73,11 @@ int main(int ac, char **av)
     game.img = mlx_new_image(game.mlx.mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
     game.addr = mlx_get_data_addr(game.img, &game.bpp, &game.line_len,
 			&game.endian);
+	if (!load_textures(&game))
+    {
+        printf("Make sure you have textures/wall.xpm and textures/floor.xpm\n");
+        return (1);
+    }
     init_player(&game);
 	mlx_hook(game.mlx.win, 2, 1L<<0, key_press, &game);
     mlx_hook(game.mlx.win, 17, 0, close_game, &game);

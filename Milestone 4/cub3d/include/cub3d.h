@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:41:53 by tolanini          #+#    #+#             */
-/*   Updated: 2025/10/27 23:20:59 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/10/28 15:29:20 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,17 @@
 # define KEY_LEFT	65361
 # define KEY_RIGHT	65363
 
+typedef struct s_texture
+{
+    void    *img;
+    char    *addr;
+    int     width;
+    int     height;
+    int     bpp;
+    int     line_len;
+    int     endian;
+}   t_texture;
+
 typedef struct s_vars
 {
 	void	*mlx;
@@ -48,6 +59,7 @@ typedef struct s_map
 	int		player_x;
 	int		player_y;
 	char	player_dir;
+	
 }	t_map;
 
 typedef struct s_player
@@ -87,21 +99,28 @@ typedef struct s_game
 	int			bpp;
 	int			line_len;
 	int			endian;
+	t_texture   wall_tex;
+    t_texture   floor_tex;
 }	t_game;
 
 // Engine functions
 void		my_mlx_pixel_put(t_game *game, int x, int y, int color);
 void		cast_ray(t_game *game, t_ray *ray, int x);
-void		draw_column(t_game *game, int x, t_ray *ray);
+void draw_textured_column(t_game *game, int x, t_ray *ray);
 int			render_frame(t_game *game);
 
 // Player functions
 void		init_player(t_game *game);
 
-//key handling functions
+// Key handling functions
 int		key_press(int keycode, t_game *game);
 int		close_game(t_game *game);
 void	move_player(t_game *game, double move_x, double move_y);
 void	rotate_player(t_game *game, double rot_speed);
+
+// Texture rendering
+int     load_texture(t_game *game, t_texture *tex, char *path);
+int     get_texture_color(t_texture *tex, int x, int y);
+void    draw_textured_column(t_game *game, int x, t_ray *ray);
 
 #endif
