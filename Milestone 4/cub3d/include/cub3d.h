@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:41:53 by tolanini          #+#    #+#             */
-/*   Updated: 2025/10/28 15:29:20 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/11/03 14:42:29 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,10 @@ typedef struct s_game
 	int			bpp;
 	int			line_len;
 	int			endian;
-	t_texture   wall_tex;
-    t_texture   floor_tex;
+	t_texture   tex_north;
+	t_texture   tex_south;
+	t_texture   tex_east;
+	t_texture   tex_west;
 }	t_game;
 
 // Engine functions

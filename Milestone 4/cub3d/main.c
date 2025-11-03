@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:52:20 by tolanini          #+#    #+#             */
-/*   Updated: 2025/10/28 14:44:21 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/11/03 15:44:42 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,27 @@ void init_map(t_game *game)
 	}
 }
 
+// int load_textures(t_game *game)
+// {
+//     if (!load_texture(game, &game->wall_tex, "textures/wall.xpm"))
+//         return (0);
+//     if (!load_texture(game, &game->floor_tex, "textures/floor.xpm"))
+//         return (0);
+//     return (1);
+// }
 int load_textures(t_game *game)
 {
-    if (!load_texture(game, &game->wall_tex, "textures/wall.xpm"))
+    // Load the SAME texture file for all directions (for testing)
+    // Later you can replace with different files
+    if (!load_texture(game, &game->tex_north, "textures/wall.xpm") ||
+        !load_texture(game, &game->tex_south, "textures/wall.xpm") ||
+        !load_texture(game, &game->tex_east, "textures/wall.xpm") ||
+        !load_texture(game, &game->tex_west, "textures/wall.xpm"))
+    {
         return (0);
-    if (!load_texture(game, &game->floor_tex, "textures/floor.xpm"))
-        return (0);
+    }
+    
+    printf("Loaded same texture for all directions for testing\n");
     return (1);
 }
 

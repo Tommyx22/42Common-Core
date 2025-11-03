@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 17:23:46 by tolanini          #+#    #+#             */
-/*   Updated: 2025/10/28 16:06:42 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/11/03 15:46:18 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,9 +113,11 @@ void draw_textured_column(t_game *game, int x, t_ray *ray)
     int     draw_start;
     int     draw_end;
     double  wall_x;
-    int     tex_x, tex_y;
+    int     tex_x;
+    int     tex_y;
     int     y;
     int     color;
+    t_texture *tex;
 
     // Calculate wall height
     line_height = (int)(WINDOW_HEIGHT / ray->perp_wall_dist);
@@ -124,24 +126,54 @@ void draw_textured_column(t_game *game, int x, t_ray *ray)
     draw_end = line_height / 2 + WINDOW_HEIGHT / 2;
     if (draw_end >= WINDOW_HEIGHT) draw_end = WINDOW_HEIGHT - 1;
 
-    // Draw textured wall (keep this part)
+    // Determine which texture to use based on wall side
+    if (ray->side == 0)
+    {
+        if (ray->ray_dir_x > 0)
+            tex = &game->tex_east;
+        else
+            tex = &game->tex_west;
+    }
+    else
+    {
+        if (ray->ray_dir_y > 0)
+            tex = &game->tex_south;
+        else
+            tex = &game->tex_north;
+    }
+    
+    // Calculate texture coordinates
     if (ray->side == 0)
         wall_x = game->player.y + ray->perp_wall_dist * ray->ray_dir_y;
     else
         wall_x = game->player.x + ray->perp_wall_dist * ray->ray_dir_x;
     
     wall_x -= floor(wall_x);
-    tex_x = (int)(wall_x * (double)game->wall_tex.width);
-    if (tex_x < 0) tex_x = 0;
-    if (tex_x >= game->wall_tex.width) tex_x = game->wall_tex.width - 1;
+    tex_x = (int)(wall_x * (double)tex->width);
+    
+    // fix texture flipping
+    if ((ray->side == 0 && ray->ray_dir_x > 0) || (ray->side == 1 && ray->ray_dir_y < 0))
+        tex_x = tex->width - tex_x - 1;
 
+    if (tex_x < 0) tex_x = 0;
+    if (tex_x >= tex->width) tex_x = tex->width - 1;
+
+    // FIXED: PERSPECTIVE-CORRECT TEXTURE MAPPING
+    double step = 1.0 * tex->height / line_height;  // Texture step per screen pixel
+    double tex_pos = (draw_start - WINDOW_HEIGHT / 2 + line_height / 2) * step;
+    
+
+    // Draw textured wall
     y = draw_start;
     while (y < draw_end)
     {
-        tex_y = (y - draw_start) * game->wall_tex.height / line_height;
-        if (tex_y < 0) tex_y = 0;
-        if (tex_y >= game->wall_tex.height) tex_y = game->wall_tex.height - 1;
-        color = get_texture_color(&game->wall_tex, tex_x, tex_y);
+        tex_y = (int)tex_pos & (tex->height - 1);  // Wrap texture coordinate
+        tex_pos += step;
+        if (tex_y < 0)
+            tex_y = 0;
+        if (tex_y >= tex->height)
+            tex_y = tex->height - 1;
+        color = get_texture_color(tex, tex_x, tex_y);
         my_mlx_pixel_put(game, x, y, color);
         y++;
     }

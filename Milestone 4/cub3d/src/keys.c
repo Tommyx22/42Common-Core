@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 15:14:34 by tolanini          #+#    #+#             */
-/*   Updated: 2025/10/28 14:13:23 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/11/03 15:35:26 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,8 @@ int	key_press(int keycode, t_game *game)
 	else if (keycode == KEY_D)
 		strafe_player(game, move_speed, -1); // Strafe right
 	else if (keycode == KEY_LEFT)
-		rotate_player(game, rot_speed);
-	else if (keycode == KEY_RIGHT)
 		rotate_player(game, -rot_speed);
+	else if (keycode == KEY_RIGHT)
+		rotate_player(game, rot_speed);
 	return (0);
 }
