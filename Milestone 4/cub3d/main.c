@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:52:20 by tolanini          #+#    #+#             */
-/*   Updated: 2025/11/03 15:44:42 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/11/07 15:10:13 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ int main(int ac, char **av)
     }
     init_player(&game);
 	mlx_hook(game.mlx.win, 2, 1L<<0, key_press, &game);
+	mlx_hook(game.mlx.win, 6, 1L<<6, mouse_move, &game);
     mlx_hook(game.mlx.win, 17, 0, close_game, &game);
 	mlx_loop_hook(game.mlx.mlx, render_frame, &game);
     mlx_loop(game.mlx.mlx);

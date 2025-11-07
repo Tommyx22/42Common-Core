@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:41:53 by tolanini          #+#    #+#             */
-/*   Updated: 2025/11/03 14:42:29 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/11/07 15:11:45 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,5 +124,10 @@ void	rotate_player(t_game *game, double rot_speed);
 int     load_texture(t_game *game, t_texture *tex, char *path);
 int     get_texture_color(t_texture *tex, int x, int y);
 void    draw_textured_column(t_game *game, int x, t_ray *ray);
+
+// Utils like mouse and minimap
+int mouse_move(int x, int y, t_game *game);
+void draw_minimap(t_game *game);
+void    draw_square(t_game *game, int x, int y, int size, int color);
 
 #endif

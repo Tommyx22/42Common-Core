@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 15:14:34 by tolanini          #+#    #+#             */
-/*   Updated: 2025/11/03 15:35:26 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/11/07 15:15:52 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,21 @@ int	close_game(t_game *game)
 
 void	move_player(t_game *game, double move_x, double move_y)
 {
-	double	new_x;
-	double	new_y;
+    double new_x;
+    double new_y;
+    double buffer = 0.2;
 
-	new_x = game->player.x + move_x;
-	new_y = game->player.y + move_y;
-	
-	// Check if new position is not a wall
-	if (game->map.grid[(int)new_y][(int)new_x] != '1')
-	{
-		game->player.x = new_x;
-		game->player.y = new_y;
-	}
+    new_x = game->player.x + move_x;
+    new_y = game->player.y + move_y;
+    
+    if (game->map.grid[(int)new_y][(int)(new_x + buffer)] != '1' &&
+        game->map.grid[(int)new_y][(int)(new_x - buffer)] != '1' &&
+        game->map.grid[(int)(new_y + buffer)][(int)new_x] != '1' &&
+        game->map.grid[(int)(new_y - buffer)][(int)new_x] != '1')
+    {
+        game->player.x = new_x;
+        game->player.y = new_y;
+    }
 }
 
 void	rotate_player(t_game *game, double rot_speed)

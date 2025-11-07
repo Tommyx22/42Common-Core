@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 17:23:46 by tolanini          #+#    #+#             */
-/*   Updated: 2025/11/03 15:46:18 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/11/07 15:13:53 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,6 +255,8 @@ int render_frame(t_game *game)
         x++;
     }
     
+    draw_minimap(game);
+
     mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->img, 0, 0);
     return (0);
 }
