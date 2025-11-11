@@ -1,24 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   include.hpp                                        :+:      :+:    :+:   */
+/*   Contact.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 10:42:16 by tolanini          #+#    #+#             */
-/*   Updated: 2025/11/07 18:09:53 by tolanini         ###   ########.fr       */
+/*   Updated: 2025/11/11 17:55:51 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef INCLUDE_HPP
-#define INCLUDE_HPP
+#ifndef CONTACT_HPP
+#define CONTACT_HPP
 
 # include <iostream>
 # include <string>
 # include <iomanip>
+# include <cstdlib>
+# include <limits>
 
 class Contact {
     private:
+    
         std::string first_name;
         std::string last_name;
         std::string nickname;
@@ -50,17 +53,7 @@ class Contact {
         void set_secret(const std::string &secret) {
         this->secret = secret; 
         }
-}
-
-class PhoneBook {
-    private:
-        const int MAX_CONTACTS = 8;
-        Contact contacts[MAX_CONTACTS];
-
-    public:
-        
-        std::string add_contact();
+        void create_contact();
 };
-
 
 #endif

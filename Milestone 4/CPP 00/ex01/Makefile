@@ -6,15 +6,15 @@
 #    By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/23 10:38:26 by tolanini          #+#    #+#              #
-#    Updated: 2025/09/23 10:38:47 by tolanini         ###   ########.fr        #
+#    Updated: 2025/11/11 17:50:26 by tolanini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = main
+NAME = phonebook
 CPP = c++
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 
-SRC = main.cpp
+SRC = main.cpp Contact.cpp PhoneBook.cpp
 OBJ = $(SRC:.cpp=.o)
 
 all: $(NAME)
