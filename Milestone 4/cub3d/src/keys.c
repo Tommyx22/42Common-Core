@@ -6,15 +6,48 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 15:14:34 by tolanini          #+#    #+#             */
-/*   Updated: 2025/11/07 15:15:52 by tolanini         ###   ########.fr       */
+/*   Updated: 2026/02/10 15:48:49 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
+static void	destroy_texture(t_game *game, t_texture *tex)
+{
+	if (tex->img)
+	{
+		mlx_destroy_image(game->mlx.mlx, tex->img);
+		tex->img = NULL;
+	}
+}
+
 int	close_game(t_game *game)
 {
-	mlx_destroy_window(game->mlx.mlx, game->mlx.win);
+	if (game->mlx.mlx && game->img)
+	{
+		mlx_destroy_image(game->mlx.mlx, game->img);
+		game->img = NULL;
+	}
+	if (game->mlx.mlx)
+	{
+		destroy_texture(game, &game->tex_north);
+		destroy_texture(game, &game->tex_south);
+		destroy_texture(game, &game->tex_east);
+		destroy_texture(game, &game->tex_west);
+	}
+	if (game->mlx.mlx && game->mlx.win)
+	{
+		mlx_destroy_window(game->mlx.mlx, game->mlx.win);
+		game->mlx.win = NULL;
+	}
+	free_map(&game->map);
+	if (game->mlx.mlx)
+	{
+		mlx_destroy_display(game->mlx.mlx);
+		free(game->mlx.mlx);
+		game->mlx.mlx = NULL;
+	}
+	game->addr = NULL;
 	exit(0);
 	return (0);
 }

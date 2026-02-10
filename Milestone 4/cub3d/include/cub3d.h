@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:41:53 by tolanini          #+#    #+#             */
-/*   Updated: 2025/11/07 15:11:45 by tolanini         ###   ########.fr       */
+/*   Updated: 2026/02/10 15:48:26 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ typedef struct s_game
 // Engine functions
 void		my_mlx_pixel_put(t_game *game, int x, int y, int color);
 void		cast_ray(t_game *game, t_ray *ray, int x);
-void draw_textured_column(t_game *game, int x, t_ray *ray);
+void		draw_textured_column(t_game *game, int x, t_ray *ray);
 int			render_frame(t_game *game);
 
 // Player functions

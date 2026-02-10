@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:52:20 by tolanini          #+#    #+#             */
-/*   Updated: 2025/11/07 15:10:13 by tolanini         ###   ########.fr       */
+/*   Updated: 2026/02/10 15:41:31 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int main(int ac, char **av)
 		!load_texture(&game, &game.tex_west, game.map.we_path))
 	{
 		printf("Error: Cannot load textures\n");
-		free_map(&game.map);
+		close_game(&game);
 		return (1);
 	}
 	init_player(&game);

@@ -6,7 +6,7 @@
 #    By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/08 18:46:54 by tolanini          #+#    #+#              #
-#    Updated: 2025/10/28 14:13:35 by tolanini         ###   ########.fr        #
+#    Updated: 2026/02/10 14:16:56 by tolanini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ OBJ     = $(addprefix $(OBJDIR)/, $(notdir $(SRC:.c=.o)))
 
 CC      = gcc
 CFLAGS  = -Wall -Wextra -Werror -g
+LDFLAGS = -no-pie
 MLX_LIBS= -L$(MLX_PATH) -lmlx -L/usr/lib -lXext -lX11 -lm
 LFT_LIBS= -L$(LFT_PATH) -lft
 CFINC   = -I$(INCLUDES) -I$(MLX_PATH)
@@ -35,7 +36,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT) $(MLX)
 	@echo "Linking $(NAME)..."
-	$(CC) $(CFLAGS) $(OBJ) $(LFT_LIBS) $(MLX_LIBS) -o $(NAME)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ) $(LFT_LIBS) $(MLX_LIBS) -o $(NAME)
 	@echo "$(NAME) successfully compiled!"
 
 $(OBJDIR)/%.o: %.c

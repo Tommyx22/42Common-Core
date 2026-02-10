@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 15:08:30 by tolanini          #+#    #+#             */
-/*   Updated: 2025/11/07 15:16:35 by tolanini         ###   ########.fr       */
+/*   Updated: 2026/02/10 14:31:48 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,11 @@ void	draw_minimap(t_game *game)
 
 int	mouse_move(int x, int y, t_game *game)
 {
-	static int	old_x;
+	static int	old_x = -1;
 	int			diff;
 
-	old_x = 0;
 	(void)y;
-	if (old_x == 0)
+	if (old_x == -1)
 		old_x = x;
 	diff = x - old_x;
 	rotate_player(game, diff * 0.005);
