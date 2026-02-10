@@ -32,6 +32,9 @@
 # define KEY_LEFT	65361
 # define KEY_RIGHT	65363
 
+# define ERROR		-1
+# define SUCCESS	1
+
 typedef struct s_texture
 {
     void    *img;
@@ -42,6 +45,14 @@ typedef struct s_texture
     int     line_len;
     int     endian;
 }   t_texture;
+
+typedef struct s_color
+{
+	int	r;
+	int	g;
+	int	b;
+	int	set;
+}	t_color;
 
 typedef struct s_vars
 {
@@ -59,7 +70,12 @@ typedef struct s_map
 	int		player_x;
 	int		player_y;
 	char	player_dir;
-	
+	char	*no_path;
+	char	*so_path;
+	char	*we_path;
+	char	*ea_path;
+	t_color	floor;
+	t_color	ceiling;
 }	t_map;
 
 typedef struct s_player
@@ -129,5 +145,17 @@ void    draw_textured_column(t_game *game, int x, t_ray *ray);
 int mouse_move(int x, int y, t_game *game);
 void draw_minimap(t_game *game);
 void    draw_square(t_game *game, int x, int y, int size, int color);
+
+// Parsing functions
+int		parse_cub(char *file, t_game *game);
+int		validate_map(t_map *map);
+void	free_map(t_map *map);
+
+// Parsing utility functions
+char	*skip_spaces(char *s);
+int		is_empty_line(char *line);
+int		take_color(char *line, t_color *color);
+int		is_valid_int(char *str);
+int		rgb_to_int(t_color *color);
 
 #endif
