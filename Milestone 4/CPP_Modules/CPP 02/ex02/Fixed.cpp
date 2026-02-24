@@ -114,13 +114,13 @@ Fixed Fixed::operator/(const Fixed &copy) const {
 }
 
 Fixed Fixed::operator++(int) {
-	Fixed temp;
+	Fixed temp(*this);
 	this->fixedPointNumber++;
 	return temp;
 }
 
 Fixed Fixed::operator--(int) {
-	Fixed temp;
+	Fixed temp(*this);
 	this->fixedPointNumber--;
 	return temp;
 }
