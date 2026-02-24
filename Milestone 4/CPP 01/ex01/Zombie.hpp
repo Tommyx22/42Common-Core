@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 16:19:37 by tolanini          #+#    #+#             */
-/*   Updated: 2026/01/08 17:09:08 by tolanini         ###   ########.fr       */
+/*   Updated: 2026/02/24 14:34:10 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <string>
 # include <iostream>
+# include <new>
 
 class Zombie {
 	private: 
