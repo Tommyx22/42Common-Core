@@ -20,20 +20,17 @@ void	my_mlx_pixel_put(t_game *game, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-void cast_ray(t_game *game, t_ray *ray, int x)
+void	cast_ray(t_game *game, t_ray *ray, int x)
 {
-	double camera_x;
+	double	camera_x;
 
 	camera_x = 2 * x / (double)WINDOW_WIDTH - 1;
 	ray->ray_dir_x = game->player.dir_x + game->player.plane_x * camera_x;
 	ray->ray_dir_y = game->player.dir_y + game->player.plane_y * camera_x;
-	
-	//DDA
-	ray->map_x = (int)game->player.x;
+	ray->map_x = (int)game->player.x; //DDA
 	ray->map_y = (int)game->player.y;
 	ray->delta_dist_x = fabs(1 / ray->ray_dir_x);
 	ray->delta_dist_y = fabs(1 / ray->ray_dir_y);
-	
 	if (ray->ray_dir_x < 0)
 	{
 		ray->step_x = -1;
@@ -42,9 +39,9 @@ void cast_ray(t_game *game, t_ray *ray, int x)
 	else
 	{
 		ray->step_x = 1;
-		ray->side_dist_x = (ray->map_x + 1.0 - game->player.x) * ray->delta_dist_x;
+		ray->side_dist_x = (ray->map_x + 1.0 - game->player.x)
+			* ray->delta_dist_x;
 	}
-	
 	if (ray->ray_dir_y < 0)
 	{
 		ray->step_y = -1;
@@ -53,9 +50,9 @@ void cast_ray(t_game *game, t_ray *ray, int x)
 	else
 	{
 		ray->step_y = 1;
-		ray->side_dist_y = (ray->map_y + 1.0 - game->player.y) * ray->delta_dist_y;
+		ray->side_dist_y = (ray->map_y + 1.0 - game->player.y)
+			* ray->delta_dist_y;
 	}
-	
 	while (ray->hit == 0)
 	{
 		if (ray->side_dist_x < ray->side_dist_y)
@@ -73,129 +70,114 @@ void cast_ray(t_game *game, t_ray *ray, int x)
 		if (game->map.grid[ray->map_y][ray->map_x] == '1')
 			ray->hit = 1;
 	}
-	
 	if (ray->side == 0)
-		ray->perp_wall_dist = fabs((ray->map_x - game->player.x + (1 - ray->step_x) / 2) / ray->ray_dir_x);
+		ray->perp_wall_dist = fabs((ray->map_x - game->player.x
+					+ (1 - ray->step_x) / 2) / ray->ray_dir_x);
 	else
-		ray->perp_wall_dist = fabs((ray->map_y - game->player.y + (1 - ray->step_y) / 2) / ray->ray_dir_y);
+		ray->perp_wall_dist = fabs((ray->map_y - game->player.y
+					+ (1 - ray->step_y) / 2) / ray->ray_dir_y);
 }
 
-void draw_textured_column(t_game *game, int x, t_ray *ray)
+void	draw_textured_column(t_game *game, int x, t_ray *ray)
 {
-	int     line_height;
-	int     draw_start;
-	int     draw_end;
-	double  wall_x;
-	int     tex_x;
-	int     tex_y;
-	int     y;
-	int     color;
-	t_texture *tex;
+	t_draw_col	col;
 
-	// Calculate wall height
-	line_height = (int)(WINDOW_HEIGHT / ray->perp_wall_dist);
-	draw_start = -line_height / 2 + WINDOW_HEIGHT / 2;
-	if (draw_start < 0) draw_start = 0;
-	draw_end = line_height / 2 + WINDOW_HEIGHT / 2;
-	if (draw_end >= WINDOW_HEIGHT) draw_end = WINDOW_HEIGHT - 1;
-
-	// Determine which texture to use based on wall side
+	col.line_height = (int)(WINDOW_HEIGHT / ray->perp_wall_dist);
+	col.draw_start = -col.line_height / 2 + WINDOW_HEIGHT / 2;
+	if (col.draw_start < 0)
+		col.draw_start = 0;
+	col.draw_end = col.line_height / 2 + WINDOW_HEIGHT / 2;
+	if (col.draw_end >= WINDOW_HEIGHT)
+		col.draw_end = WINDOW_HEIGHT - 1;
 	if (ray->side == 0)
 	{
 		if (ray->ray_dir_x > 0)
-			tex = &game->tex_east;
+			col.tex = &game->tex_east;
 		else
-			tex = &game->tex_west;
+			col.tex = &game->tex_west;
 	}
 	else
 	{
 		if (ray->ray_dir_y > 0)
-			tex = &game->tex_south;
+			col.tex = &game->tex_south;
 		else
-			tex = &game->tex_north;
+			col.tex = &game->tex_north;
 	}
-	
-	// Calculate texture coordinates
 	if (ray->side == 0)
-		wall_x = game->player.y + ray->perp_wall_dist * ray->ray_dir_y;
+		col.wall_x = game->player.y + ray->perp_wall_dist * ray->ray_dir_y;
 	else
-		wall_x = game->player.x + ray->perp_wall_dist * ray->ray_dir_x;
-	
-	wall_x -= floor(wall_x);
-	tex_x = (int)(wall_x * (double)tex->width);
-	
-	// fix texture flipping
-	if ((ray->side == 0 && ray->ray_dir_x > 0) || (ray->side == 1 && ray->ray_dir_y < 0))
-		tex_x = tex->width - tex_x - 1;
-
-	if (tex_x < 0) tex_x = 0;
-	if (tex_x >= tex->width) tex_x = tex->width - 1;
-
-	// FIXED: PERSPECTIVE-CORRECT TEXTURE MAPPING
-	double step = 1.0 * tex->height / line_height;  // Texture step per screen pixel
-	double tex_pos = (draw_start - WINDOW_HEIGHT / 2 + line_height / 2) * step;
-	
-
-	// Draw textured wall
-	y = draw_start;
-	while (y < draw_end)
+		col.wall_x = game->player.x + ray->perp_wall_dist * ray->ray_dir_x;
+	col.wall_x -= floor(col.wall_x);
+	col.tex_x = (int)(col.wall_x * (double)col.tex->width);
+	if ((ray->side == 0 && ray->ray_dir_x > 0)
+		|| (ray->side == 1 && ray->ray_dir_y < 0))
+		col.tex_x = col.tex->width - col.tex_x - 1;
+	if (col.tex_x < 0)
+		col.tex_x = 0;
+	if (col.tex_x >= col.tex->width)
+		col.tex_x = col.tex->width - 1;
+	col.step = 1.0 * col.tex->height / col.line_height;
+	col.tex_pos = (col.draw_start - WINDOW_HEIGHT / 2 + col.line_height / 2)
+		* col.step;
+	col.y = col.draw_start;
+	while (col.y < col.draw_end)
 	{
-		tex_y = (int)tex_pos & (tex->height - 1);  // Wrap texture coordinate
-		tex_pos += step;
-		if (tex_y < 0)
-			tex_y = 0;
-		if (tex_y >= tex->height)
-			tex_y = tex->height - 1;
-		color = get_texture_color(tex, tex_x, tex_y);
-		my_mlx_pixel_put(game, x, y, color);
-		y++;
+		col.tex_y = (int)col.tex_pos & (col.tex->height - 1);
+		col.tex_pos += col.step;
+		if (col.tex_y < 0)
+			col.tex_y = 0;
+		if (col.tex_y >= col.tex->height)
+			col.tex_y = col.tex->height - 1;
+		col.color = get_texture_color(col.tex, col.tex_x, col.tex_y);
+		my_mlx_pixel_put(game, x, col.y, col.color);
+		col.y++;
 	}
 }
 
-int render_frame(t_game *game)
+int	render_frame(t_game *game)
 {
 	t_ray	ray;
 	int		x;
 	int		y;
-	double	camera_x;
 	int		ceiling_color;
 	int		floor_color;
+
 	ceiling_color = rgb_to_int(&game->map.ceiling);
 	floor_color = rgb_to_int(&game->map.floor);
-
 	// Draw ceiling (top half)
-	for (y = 0; y < WINDOW_HEIGHT / 2; y++)
+	y = 0;
+	while (y < WINDOW_HEIGHT / 2)
 	{
-		for (x = 0; x < WINDOW_WIDTH; x++)
+		x = 0;
+		while (x < WINDOW_WIDTH)
 		{
 			my_mlx_pixel_put(game, x, y, ceiling_color);
+			x++;
 		}
+		y++;
 	}
-
 	// Draw floor (bottom half)
-	for (y = WINDOW_HEIGHT / 2; y < WINDOW_HEIGHT; y++)
+	y = WINDOW_HEIGHT / 2;
+	while (y < WINDOW_HEIGHT)
 	{
-		for (x = 0; x < WINDOW_WIDTH; x++)
+		x = 0;
+		while (x < WINDOW_WIDTH)
 		{
 			my_mlx_pixel_put(game, x, y, floor_color);
+			x++;
 		}
+		y++;
 	}
-
 	// Then draw walls on top
 	x = 0;
 	while (x < WINDOW_WIDTH)
 	{
-		camera_x = 2 * x / (double)WINDOW_WIDTH - 1;
-		ray.ray_dir_x = game->player.dir_x + game->player.plane_x * camera_x;
-		ray.ray_dir_y = game->player.dir_y + game->player.plane_y * camera_x;
 		ray.hit = 0;
 		cast_ray(game, &ray, x);
 		draw_textured_column(game, x, &ray);
 		x++;
 	}
-	
 	draw_minimap(game);
-
 	mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->img, 0, 0);
 	return (0);
 }

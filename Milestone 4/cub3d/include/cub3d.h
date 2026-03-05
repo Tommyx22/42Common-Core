@@ -37,14 +37,14 @@
 
 typedef struct s_texture
 {
-    void    *img;
-    char    *addr;
-    int     width;
-    int     height;
-    int     bpp;
-    int     line_len;
-    int     endian;
-}   t_texture;
+	void	*img;
+	char	*addr;
+	int		width;
+	int		height;
+	int		bpp;
+	int		line_len;
+	int		endian;
+}	t_texture;
 
 typedef struct s_color
 {
@@ -88,6 +88,29 @@ typedef struct s_player
 	double	plane_y;
 }	t_player;
 
+typedef struct s_square
+{
+	int	x;
+	int	y;
+	int	size;
+	int	color;
+}	t_square;
+
+typedef struct s_draw_col
+{
+	int			line_height;
+	int			draw_start;
+	int			draw_end;
+	double		wall_x;
+	int			tex_x;
+	int			tex_y;
+	int			y;
+	int			color;
+	double		step;
+	double		tex_pos;
+	t_texture	*tex;
+}	t_draw_col;
+
 typedef struct s_ray
 {
 	double	ray_dir_x;
@@ -115,10 +138,10 @@ typedef struct s_game
 	int			bpp;
 	int			line_len;
 	int			endian;
-	t_texture   tex_north;
-	t_texture   tex_south;
-	t_texture   tex_east;
-	t_texture   tex_west;
+	t_texture	tex_north;
+	t_texture	tex_south;
+	t_texture	tex_east;
+	t_texture	tex_west;
 }	t_game;
 
 // Engine functions
@@ -131,31 +154,32 @@ int			render_frame(t_game *game);
 void		init_player(t_game *game);
 
 // Key handling functions
-int		key_press(int keycode, t_game *game);
-int		close_game(t_game *game);
-void	move_player(t_game *game, double move_x, double move_y);
-void	rotate_player(t_game *game, double rot_speed);
+int			key_press(int keycode, t_game *game);
+int			close_game(t_game *game);
+void		move_player(t_game *game, double move_x, double move_y);
+void		rotate_player(t_game *game, double rot_speed);
+void		strafe_player(t_game *game, double strafe_speed, int direction);
 
 // Texture rendering
-int     load_texture(t_game *game, t_texture *tex, char *path);
-int     get_texture_color(t_texture *tex, int x, int y);
-void    draw_textured_column(t_game *game, int x, t_ray *ray);
+int			load_texture(t_game *game, t_texture *tex, char *path);
+int			get_texture_color(t_texture *tex, int x, int y);
+void		draw_textured_column(t_game *game, int x, t_ray *ray);
 
 // Utils like mouse and minimap
-int mouse_move(int x, int y, t_game *game);
-void draw_minimap(t_game *game);
-void    draw_square(t_game *game, int x, int y, int size, int color);
+int			mouse_move(int x, int y, t_game *game);
+void		draw_minimap(t_game *game);
+void		draw_square(t_game *game, t_square square);
 
 // Parsing functions
-int		parse_cub(char *file, t_game *game);
-int		validate_map(t_map *map);
-void	free_map(t_map *map);
+int			parse_cub(char *file, t_game *game);
+int			validate_map(t_map *map);
+void		free_map(t_map *map);
 
 // Parsing utility functions
-char	*skip_spaces(char *s);
-int		is_empty_line(char *line);
-int		take_color(char *line, t_color *color);
-int		is_valid_int(char *str);
-int		rgb_to_int(t_color *color);
+char		*skip_spaces(char *s);
+int			is_empty_line(char *line);
+int			take_color(char *line, t_color *color);
+int			is_valid_int(char *str);
+int			rgb_to_int(t_color *color);
 
 #endif

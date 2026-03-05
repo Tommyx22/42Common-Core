@@ -12,18 +12,18 @@
 
 #include "cub3d.h"
 
-void	draw_square(t_game *game, int x, int y, int size, int color)
+void	draw_square(t_game *game, t_square square)
 {
 	int	i;
 	int	j;
 
 	i = 0;
-	while (i < size)
+	while (i < square.size)
 	{
 		j = 0;
-		while (j < size)
+		while (j < square.size)
 		{
-			my_mlx_pixel_put(game, x + j, y + i, color);
+			my_mlx_pixel_put(game, square.x + j, square.y + i, square.color);
 			j++;
 		}
 		i++;
@@ -32,18 +32,35 @@ void	draw_square(t_game *game, int x, int y, int size, int color)
 
 void	draw_minimap(t_game *game)
 {
-	int	scale;
+	int			x;
+	int			y;
+	int			scale;
+	t_square	square;
 
 	scale = 20;
-	for (int y = 0; y < game->map.height; y++)
+	y = 0;
+	while (y < game->map.height)
 	{
-		for (int x = 0; x < game->map.width; x++)
+		x = 0;
+		while (x < game->map.width)
 		{
 			if (game->map.grid[y][x] == '1')
-				draw_square(game, x*scale, y*scale, scale, 0xFF0000);
+			{
+				square.x = x * scale;
+				square.y = y * scale;
+				square.size = scale;
+				square.color = 0xFF0000;
+				draw_square(game, square);
+			}
+			x++;
 		}
+		y++;
 	}
-	draw_square(game, game->player.x*scale, game->player.y*scale, 3, 0x00FF00);
+	square.x = game->player.x * scale;
+	square.y = game->player.y * scale;
+	square.size = 3;
+	square.color = 0x00FF00;
+	draw_square(game, square);
 }
 
 int	mouse_move(int x, int y, t_game *game)
