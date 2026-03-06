@@ -30,6 +30,15 @@ void	draw_square(t_game *game, t_square square)
 	}
 }
 
+void	draw_player_minimap(t_game *game, int scale, t_square *square)
+{
+	square->x = game->player.x * scale;
+	square->y = game->player.y * scale;
+	square->size = 3;
+	square->color = 0x00FF00;
+	draw_square(game, *square);
+}
+
 void	draw_minimap(t_game *game)
 {
 	int			x;
@@ -56,11 +65,7 @@ void	draw_minimap(t_game *game)
 		}
 		y++;
 	}
-	square.x = game->player.x * scale;
-	square.y = game->player.y * scale;
-	square.size = 3;
-	square.color = 0x00FF00;
-	draw_square(game, square);
+	draw_player_minimap(game, scale, &square);
 }
 
 int	mouse_move(int x, int y, t_game *game)

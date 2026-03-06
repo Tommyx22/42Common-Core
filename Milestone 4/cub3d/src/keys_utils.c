@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 13:33:18 by tolanini          #+#    #+#             */
-/*   Updated: 2026/03/05 13:33:40 by tolanini         ###   ########.fr       */
+/*   Updated: 2026/03/06 14:39:51 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,21 @@ int	key_press(int keycode, t_game *game)
 	else if (keycode == KEY_RIGHT)
 		rotate_player(game, rot_speed);
 	return (0);
+}
+
+static void	destroy_texture(t_game *game, t_texture *tex)
+{
+	if (tex->img)
+	{
+		mlx_destroy_image(game->mlx.mlx, tex->img);
+		tex->img = NULL;
+	}
+}
+
+void	destroy_all_texture(t_game *game)
+{
+	destroy_texture(game, &game->tex_north);
+	destroy_texture(game, &game->tex_south);
+	destroy_texture(game, &game->tex_east);
+	destroy_texture(game, &game->tex_west);
 }

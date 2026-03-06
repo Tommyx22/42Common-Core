@@ -1,35 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   validating_map_utils.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/08 18:52:20 by tolanini          #+#    #+#             */
-/*   Updated: 2026/02/10 15:41:31 by tolanini         ###   ########.fr       */
+/*   Created: 2026/03/06 14:04:47 by tolanini          #+#    #+#             */
+/*   Updated: 2026/03/06 14:04:58 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	main(int ac, char **av)
+int	is_valid_map_char(char c)
 {
-	t_game	game;
+	return (c == '0' || c == '1' || c == ' '
+		|| c == 'N' || c == 'S' || c == 'E' || c == 'W');
+}
 
-	if (ac != 2)
-		return (printf("Error: Usage: ./cub3d <map.cub>\n"), 1);
-	ft_bzero(&game, sizeof(t_game));
-	if (parse_cub(av[1], &game) == ERROR)
-	{
-		free_map(&game.map);
+int	process_player_char(t_map *map, int x, int y, int *count)
+{
+	if (map->grid[y][x] != 'N' && map->grid[y][x] != 'S'
+		&& map->grid[y][x] != 'E' && map->grid[y][x] != 'W')
 		return (1);
-	}
-	if (init_mlx(&game) == ERROR)
-		return (close_game(&game), 1);
-	if (load_all_textures(&game) == ERROR)
-		return (close_game(&game), 1);
-	init_player(&game);
-	setup_hooks(&game);
-	mlx_loop(game.mlx.mlx);
-	return (0);
+	map->player_dir = map->grid[y][x];
+	map->player_x = x;
+	map->player_y = y;
+	map->grid[y][x] = '0';
+	(*count)++;
+	return (1);
 }

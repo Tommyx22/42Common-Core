@@ -31,7 +31,7 @@ int	take_texture(char *line, char **path)
 	return (1);
 }
 
-static int	take_element(char *line, t_map *map)
+int	take_element(char *line, t_map *map)
 {
 	char	*s;
 
@@ -53,94 +53,36 @@ static int	take_element(char *line, t_map *map)
 
 static int	take_map(char **lines, t_map *map, int start)
 {
-	int	i;
-	int	len;
-	int	y;
-	int	x;
-
 	while (lines[start] && is_empty_line(lines[start]))
 		start++;
 	if (!lines[start])
 		return (ft_putstr_fd("Error\nNo map content found\n", 2), 0);
-	i = start;
-	map->height = 0;
-	map->width = 0;
-	while (lines[i] && !is_empty_line(lines[i]))
-	{
-		len = ft_strlen(lines[i]);
-		if (len > map->width)
-			map->width = len;
-		map->height++;
-		i++;
-	}
+	calculate_map_dimensions(lines, start, map);
 	map->grid = (char **)ft_calloc(map->height + 1, sizeof(char *));
 	if (!map->grid)
 		return (ft_putstr_fd("Error\nMalloc failed\n", 2), 0);
-	y = -1;
-	while (++y < map->height)
-	{
-		map->grid[y] = (char *)ft_calloc(map->width + 1, sizeof(char));
-		if (!map->grid[y])
-			return (ft_putstr_fd("Error\nMalloc failed\n", 2), 0);
-		x = -1;
-		while (++x < (int)ft_strlen(lines[start + y]))
-			map->grid[y][x] = lines[start + y][x];
-		while (x < map->width)
-			map->grid[y][x++] = ' ';
-		map->grid[y][map->width] = '\0';
-	}
-	map->grid[map->height] = NULL;
+	if (!fill_map_grid(lines, map, start))
+		return (0);
 	return (1);
 }
 
 static int	read_and_parse(char *file, t_game *game)
 {
-	int		fd;
-	int		i;
-	int		ret;
-	char	*line;
 	char	**lines;
+	int		map_start;
 
-	fd = open(file, O_RDONLY);
-	if (fd < 0)
-		return (ft_putstr_fd("Error\nCannot open file\n", 2), 0);
-	i = 0;
-	lines = (char **)ft_calloc(4096, sizeof(char *));
-	line = get_next_line(fd);
-	while (line != NULL)
-	{
-		if (line[ft_strlen(line) - 1] == '\n')
-			line[ft_strlen(line) - 1] = '\0';
-		lines[i++] = line;
-		line = get_next_line(fd);
-	}
-	lines[i] = NULL;
-	close(fd);
-	i = 0;
-	while (lines[i])
-	{
-		if (is_empty_line(lines[i]))
-		{
-			i++;
-			continue ;
-		}
-		ret = take_element(lines[i], &game->map);
-		if (ret == 0)
-			return (ft_free_split(lines), 0);
-		if (ret == -1)
-			break ;
-		i++;
-	}
-	if (!game->map.no_path || !game->map.so_path || !game->map.we_path
-		|| !game->map.ea_path || !game->map.floor.set
-		|| !game->map.ceiling.set)
-	{
-		ft_free_split(lines);
-		return (ft_putstr_fd("Error\nMissing texture or color\n", 2), 0);
-	}
-	ret = take_map(lines, &game->map, i);
+	lines = read_file_to_lines(file);
+	if (!lines)
+		return (0);
+	map_start = process_config_elements(lines, game);
+	if (map_start == -1)
+		return (ft_free_split(lines), 0);
+	if (!check_required_fields(game))
+		return (ft_free_split(lines), 0);
+	if (!take_map(lines, &game->map, map_start))
+		return (ft_free_split(lines), 0);
 	ft_free_split(lines);
-	return (ret);
+	return (1);
 }
 
 int	parse_cub(char *file, t_game *game)

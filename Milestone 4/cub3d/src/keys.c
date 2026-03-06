@@ -12,15 +12,6 @@
 
 #include "cub3d.h"
 
-static void	destroy_texture(t_game *game, t_texture *tex)
-{
-	if (tex->img)
-	{
-		mlx_destroy_image(game->mlx.mlx, tex->img);
-		tex->img = NULL;
-	}
-}
-
 int	close_game(t_game *game)
 {
 	if (game->mlx.mlx && game->img)
@@ -29,12 +20,7 @@ int	close_game(t_game *game)
 		game->img = NULL;
 	}
 	if (game->mlx.mlx)
-	{
-		destroy_texture(game, &game->tex_north);
-		destroy_texture(game, &game->tex_south);
-		destroy_texture(game, &game->tex_east);
-		destroy_texture(game, &game->tex_west);
-	}
+		destroy_all_texture(game);
 	if (game->mlx.mlx && game->mlx.win)
 	{
 		mlx_destroy_window(game->mlx.mlx, game->mlx.win);

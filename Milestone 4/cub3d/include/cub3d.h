@@ -149,6 +149,8 @@ void		my_mlx_pixel_put(t_game *game, int x, int y, int color);
 void		cast_ray(t_game *game, t_ray *ray, int x);
 void		draw_textured_column(t_game *game, int x, t_ray *ray);
 int			render_frame(t_game *game);
+int			init_mlx(t_game *game);
+void		setup_hooks(t_game *game);
 
 // Player functions
 void		init_player(t_game *game);
@@ -159,9 +161,11 @@ int			close_game(t_game *game);
 void		move_player(t_game *game, double move_x, double move_y);
 void		rotate_player(t_game *game, double rot_speed);
 void		strafe_player(t_game *game, double strafe_speed, int direction);
+void		destroy_all_texture(t_game *game);
 
 // Texture rendering
 int			load_texture(t_game *game, t_texture *tex, char *path);
+int			load_all_textures(t_game *game);
 int			get_texture_color(t_texture *tex, int x, int y);
 void		draw_textured_column(t_game *game, int x, t_ray *ray);
 
@@ -169,6 +173,7 @@ void		draw_textured_column(t_game *game, int x, t_ray *ray);
 int			mouse_move(int x, int y, t_game *game);
 void		draw_minimap(t_game *game);
 void		draw_square(t_game *game, t_square square);
+void		draw_player_minimap(t_game *game, int scale, t_square *square);
 
 // Parsing functions
 int			parse_cub(char *file, t_game *game);
@@ -181,5 +186,15 @@ int			is_empty_line(char *line);
 int			take_color(char *line, t_color *color);
 int			is_valid_int(char *str);
 int			rgb_to_int(t_color *color);
+char		**parse_rgb_split(char *trimmed);
+int			validate_rgb_values(char **rgb, t_color *color);
+int			is_valid_map_char(char c);
+int			process_player_char(t_map *map, int x, int y, int *count);
+void		calculate_map_dimensions(char **lines, int start, t_map *map);
+int			fill_map_grid(char **lines, t_map *map, int start);
+char		**read_file_to_lines(char *file);
+int			process_config_elements(char **lines, t_game *game);
+int			check_required_fields(t_game *game);
+int			take_element(char *line, t_map *map);
 
 #endif

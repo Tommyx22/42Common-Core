@@ -25,21 +25,10 @@ static int	validate_char(t_map *map)
 		x = -1;
 		while (++x < map->width)
 		{
-			if (map->grid[y][x] != '0' && map->grid[y][x] != '1'
-				&& map->grid[y][x] != ' ' && map->grid[y][x] != 'N'
-				&& map->grid[y][x] != 'S' && map->grid[y][x] != 'E'
-				&& map->grid[y][x] != 'W')
+			if (!is_valid_map_char(map->grid[y][x]))
 				return (ft_putstr_fd("Error\nInvalid character in map\n",
 						2), 0);
-			if (map->grid[y][x] == 'N' || map->grid[y][x] == 'S'
-				|| map->grid[y][x] == 'E' || map->grid[y][x] == 'W')
-			{
-				map->player_dir = map->grid[y][x];
-				map->player_x = x;
-				map->player_y = y;
-				map->grid[y][x] = '0';
-				count++;
-			}
+			process_player_char(map, x, y, &count);
 		}
 	}
 	if (count != 1)
