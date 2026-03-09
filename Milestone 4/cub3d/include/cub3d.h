@@ -152,6 +152,21 @@ int			render_frame(t_game *game);
 int			init_mlx(t_game *game);
 void		setup_hooks(t_game *game);
 
+// Engine utility functions
+void		init_ray(t_game *game, t_ray *ray, int x);
+void		calculate_x_y(t_game *game, t_ray *ray);
+void		perform_dda(t_game *game, t_ray *ray);
+void		calculate_wall_dist(t_game *game, t_ray *ray);
+void		calculate_column_bounds(t_draw_col *col, double perp_wall_dist);
+void		select_texture(t_game *game, t_draw_col *col, t_ray *ray);
+void		calculate_texture_x(t_game *game, t_draw_col *col, t_ray *ray);
+void		setup_texture_sampling(t_draw_col *col);
+void		render_column_pixels(t_game *game, int x, t_draw_col *col);
+void		draw_ceiling(t_game *game, int ceiling_color);
+void		draw_floor(t_game *game, int floor_color);
+void		draw_walls(t_game *game);
+void		display_frame(t_game *game);
+
 // Player functions
 void		init_player(t_game *game);
 

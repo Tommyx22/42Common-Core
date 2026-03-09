@@ -22,162 +22,33 @@ void	my_mlx_pixel_put(t_game *game, int x, int y, int color)
 
 void	cast_ray(t_game *game, t_ray *ray, int x)
 {
-	double	camera_x;
-
-	camera_x = 2 * x / (double)WINDOW_WIDTH - 1;
-	ray->ray_dir_x = game->player.dir_x + game->player.plane_x * camera_x;
-	ray->ray_dir_y = game->player.dir_y + game->player.plane_y * camera_x;
-	ray->map_x = (int)game->player.x; //DDA
-	ray->map_y = (int)game->player.y;
-	ray->delta_dist_x = fabs(1 / ray->ray_dir_x);
-	ray->delta_dist_y = fabs(1 / ray->ray_dir_y);
-	if (ray->ray_dir_x < 0)
-	{
-		ray->step_x = -1;
-		ray->side_dist_x = (game->player.x - ray->map_x) * ray->delta_dist_x;
-	}
-	else
-	{
-		ray->step_x = 1;
-		ray->side_dist_x = (ray->map_x + 1.0 - game->player.x)
-			* ray->delta_dist_x;
-	}
-	if (ray->ray_dir_y < 0)
-	{
-		ray->step_y = -1;
-		ray->side_dist_y = (game->player.y - ray->map_y) * ray->delta_dist_y;
-	}
-	else
-	{
-		ray->step_y = 1;
-		ray->side_dist_y = (ray->map_y + 1.0 - game->player.y)
-			* ray->delta_dist_y;
-	}
-	while (ray->hit == 0)
-	{
-		if (ray->side_dist_x < ray->side_dist_y)
-		{
-			ray->side_dist_x += ray->delta_dist_x;
-			ray->map_x += ray->step_x;
-			ray->side = 0;
-		}
-		else
-		{
-			ray->side_dist_y += ray->delta_dist_y;
-			ray->map_y += ray->step_y;
-			ray->side = 1;
-		}
-		if (game->map.grid[ray->map_y][ray->map_x] == '1')
-			ray->hit = 1;
-	}
-	if (ray->side == 0)
-		ray->perp_wall_dist = fabs((ray->map_x - game->player.x
-					+ (1 - ray->step_x) / 2) / ray->ray_dir_x);
-	else
-		ray->perp_wall_dist = fabs((ray->map_y - game->player.y
-					+ (1 - ray->step_y) / 2) / ray->ray_dir_y);
+	init_ray(game, ray, x);
+	calculate_x_y(game, ray);
+	perform_dda(game, ray);
+	calculate_wall_dist(game, ray);
 }
 
 void	draw_textured_column(t_game *game, int x, t_ray *ray)
 {
 	t_draw_col	col;
 
-	col.line_height = (int)(WINDOW_HEIGHT / ray->perp_wall_dist);
-	col.draw_start = -col.line_height / 2 + WINDOW_HEIGHT / 2;
-	if (col.draw_start < 0)
-		col.draw_start = 0;
-	col.draw_end = col.line_height / 2 + WINDOW_HEIGHT / 2;
-	if (col.draw_end >= WINDOW_HEIGHT)
-		col.draw_end = WINDOW_HEIGHT - 1;
-	if (ray->side == 0)
-	{
-		if (ray->ray_dir_x > 0)
-			col.tex = &game->tex_east;
-		else
-			col.tex = &game->tex_west;
-	}
-	else
-	{
-		if (ray->ray_dir_y > 0)
-			col.tex = &game->tex_south;
-		else
-			col.tex = &game->tex_north;
-	}
-	if (ray->side == 0)
-		col.wall_x = game->player.y + ray->perp_wall_dist * ray->ray_dir_y;
-	else
-		col.wall_x = game->player.x + ray->perp_wall_dist * ray->ray_dir_x;
-	col.wall_x -= floor(col.wall_x);
-	col.tex_x = (int)(col.wall_x * (double)col.tex->width);
-	if ((ray->side == 0 && ray->ray_dir_x > 0)
-		|| (ray->side == 1 && ray->ray_dir_y < 0))
-		col.tex_x = col.tex->width - col.tex_x - 1;
-	if (col.tex_x < 0)
-		col.tex_x = 0;
-	if (col.tex_x >= col.tex->width)
-		col.tex_x = col.tex->width - 1;
-	col.step = 1.0 * col.tex->height / col.line_height;
-	col.tex_pos = (col.draw_start - WINDOW_HEIGHT / 2 + col.line_height / 2)
-		* col.step;
-	col.y = col.draw_start;
-	while (col.y < col.draw_end)
-	{
-		col.tex_y = (int)col.tex_pos & (col.tex->height - 1);
-		col.tex_pos += col.step;
-		if (col.tex_y < 0)
-			col.tex_y = 0;
-		if (col.tex_y >= col.tex->height)
-			col.tex_y = col.tex->height - 1;
-		col.color = get_texture_color(col.tex, col.tex_x, col.tex_y);
-		my_mlx_pixel_put(game, x, col.y, col.color);
-		col.y++;
-	}
+	calculate_column_bounds(&col, ray->perp_wall_dist);
+	select_texture(game, &col, ray);
+	calculate_texture_x(game, &col, ray);
+	setup_texture_sampling(&col);
+	render_column_pixels(game, x, &col);
 }
 
 int	render_frame(t_game *game)
 {
-	t_ray	ray;
-	int		x;
-	int		y;
-	int		ceiling_color;
-	int		floor_color;
+	int	ceiling_color;
+	int	floor_color;
 
 	ceiling_color = rgb_to_int(&game->map.ceiling);
 	floor_color = rgb_to_int(&game->map.floor);
-	// Draw ceiling (top half)
-	y = 0;
-	while (y < WINDOW_HEIGHT / 2)
-	{
-		x = 0;
-		while (x < WINDOW_WIDTH)
-		{
-			my_mlx_pixel_put(game, x, y, ceiling_color);
-			x++;
-		}
-		y++;
-	}
-	// Draw floor (bottom half)
-	y = WINDOW_HEIGHT / 2;
-	while (y < WINDOW_HEIGHT)
-	{
-		x = 0;
-		while (x < WINDOW_WIDTH)
-		{
-			my_mlx_pixel_put(game, x, y, floor_color);
-			x++;
-		}
-		y++;
-	}
-	// Then draw walls on top
-	x = 0;
-	while (x < WINDOW_WIDTH)
-	{
-		ray.hit = 0;
-		cast_ray(game, &ray, x);
-		draw_textured_column(game, x, &ray);
-		x++;
-	}
-	draw_minimap(game);
-	mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->img, 0, 0);
+	draw_ceiling(game, ceiling_color);
+	draw_floor(game, floor_color);
+	draw_walls(game);
+	display_frame(game);
 	return (0);
 }
