@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 15:08:30 by tolanini          #+#    #+#             */
-/*   Updated: 2026/02/10 14:31:48 by tolanini         ###   ########.fr       */
+/*   Updated: 2026/03/11 14:21:39 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	draw_player_minimap(t_game *game, int scale, t_square *square)
 	square->x = game->player.x * scale;
 	square->y = game->player.y * scale;
 	square->size = 3;
-	square->color = 0x00FF00;
+	square->color = 0x000000;
 	draw_square(game, *square);
 }
 

@@ -6,35 +6,35 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 15:14:34 by tolanini          #+#    #+#             */
-/*   Updated: 2026/02/10 15:48:49 by tolanini         ###   ########.fr       */
+/*   Updated: 2026/03/11 14:29:29 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	close_game(t_game *game)
+int	key_press(int keycode, t_game *game)
 {
-	if (game->mlx.mlx && game->img)
-	{
-		mlx_destroy_image(game->mlx.mlx, game->img);
-		game->img = NULL;
-	}
-	if (game->mlx.mlx)
-		destroy_all_texture(game);
-	if (game->mlx.mlx && game->mlx.win)
-	{
-		mlx_destroy_window(game->mlx.mlx, game->mlx.win);
-		game->mlx.win = NULL;
-	}
-	free_map(&game->map);
-	if (game->mlx.mlx)
-	{
-		mlx_destroy_display(game->mlx.mlx);
-		free(game->mlx.mlx);
-		game->mlx.mlx = NULL;
-	}
-	game->addr = NULL;
-	exit(0);
+	double	move_speed;
+	double	rot_speed;
+
+	move_speed = 0.1;
+	rot_speed = 0.1;
+	if (keycode == KEY_ESC)
+		close_game(game);
+	else if (keycode == KEY_W)
+		move_player(game, game->player.dir_x * move_speed,
+			game->player.dir_y * move_speed);
+	else if (keycode == KEY_S)
+		move_player(game, -game->player.dir_x * move_speed,
+			-game->player.dir_y * move_speed);
+	else if (keycode == KEY_A)
+		strafe_player(game, move_speed, 1);
+	else if (keycode == KEY_D)
+		strafe_player(game, move_speed, -1);
+	else if (keycode == KEY_LEFT)
+		rotate_player(game, -rot_speed);
+	else if (keycode == KEY_RIGHT)
+		rotate_player(game, rot_speed);
 	return (0);
 }
 
@@ -44,7 +44,7 @@ void	move_player(t_game *game, double move_x, double move_y)
 	double	new_y;
 	double	buffer;
 
-	buffer = 0.2;
+	buffer = 0.15;
 	new_x = game->player.x + move_x;
 	new_y = game->player.y + move_y;
 	if (game->map.grid[(int)new_y][(int)(new_x + buffer)] != '1' &&
