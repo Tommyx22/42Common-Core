@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/29 16:42:22 by tolanini          #+#    #+#             */
-/*   Updated: 2026/04/14 13:46:59 by tolanini         ###   ########.fr       */
+/*   Created: 2026/04/14 15:26:23 by tolanini          #+#    #+#             */
+/*   Updated: 2026/04/14 15:56:23 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ScalarConverter.hpp"
+#ifndef UTILS_HPP
+#define UTILS_HPP
 
-int main(int argc, char **argv) {
-	if (argc != 2) {
-		std::cerr << "Usage: " << argv[0] << " <string>" << std::endl;
-		return 1;
-	}
-	ScalarConverter converter;
-	converter.convert(argv[1]);
-	return 0;
-}
+#include "Base.hpp"
+#include "A.hpp"
+#include "B.hpp"
+#include "C.hpp"
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+Base *generate(void);
+void identify(Base* p);
+void identify(Base& p);
+
+#endif

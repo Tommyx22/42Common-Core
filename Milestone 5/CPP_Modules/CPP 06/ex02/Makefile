@@ -6,16 +6,17 @@
 #    By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/29 16:42:28 by tolanini          #+#    #+#              #
-#    Updated: 2026/04/14 13:46:57 by tolanini         ###   ########.fr        #
+#    Updated: 2026/04/14 15:56:28 by tolanini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = scalarconverter
+NAME = base
 CPP = c++
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 
 SRC = main.cpp \
-	ScalarConverter.cpp
+	  Base.cpp \
+	  utils.cpp
 OBJ = $(SRC:.cpp=.o)
 
 all: $(NAME)

@@ -6,16 +6,16 @@
 #    By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/29 16:42:28 by tolanini          #+#    #+#              #
-#    Updated: 2026/04/14 13:46:57 by tolanini         ###   ########.fr        #
+#    Updated: 2026/04/14 14:52:06 by tolanini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = scalarconverter
+NAME = serializer
 CPP = c++
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 
 SRC = main.cpp \
-	ScalarConverter.cpp
+	  Serializer.cpp
 OBJ = $(SRC:.cpp=.o)
 
 all: $(NAME)

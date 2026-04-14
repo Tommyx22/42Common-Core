@@ -5,19 +5,21 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/29 16:42:22 by tolanini          #+#    #+#             */
-/*   Updated: 2026/04/14 13:46:59 by tolanini         ###   ########.fr       */
+/*   Created: 2026/04/14 14:53:46 by tolanini          #+#    #+#             */
+/*   Updated: 2026/04/14 15:56:21 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ScalarConverter.hpp"
+#include "Base.hpp"
+#include "utils.hpp"
 
-int main(int argc, char **argv) {
-	if (argc != 2) {
-		std::cerr << "Usage: " << argv[0] << " <string>" << std::endl;
-		return 1;
-	}
-	ScalarConverter converter;
-	converter.convert(argv[1]);
-	return 0;
+int main() {
+	std::srand(std::time(0));
+
+	Base* basePtr = generate();
+	identify(basePtr);
+	identify(*basePtr);
+
+	delete basePtr;
+	return 0;	
 }
