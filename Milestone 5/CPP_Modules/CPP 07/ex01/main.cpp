@@ -5,30 +5,24 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/14 16:00:19 by tolanini          #+#    #+#             */
-/*   Updated: 2026/04/14 16:07:43 by tolanini         ###   ########.fr       */
+/*   Created: 2026/04/20 01:32:46 by tolanini          #+#    #+#             */
+/*   Updated: 2026/04/20 01:52:46 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "whatever.hpp"
+#include "iter.hpp"
+
+template <typename T>
+void print(const T &value) {
+	std::cout << value << " ";
+}
 
 int main() {
+	int values[] = {1, 2, 3, 4, 5};
 
-	int a = 2;
-	int b = 3;
+	std::cout << "Print test: ";
+	iter(values, 5, print<int>);
+	std::cout << std::endl;
 
-	::swap( a, b );
-	std::cout << "a = " << a << ", b = " << b << std::endl;
-	std::cout << "min( a, b ) = " << ::min( a, b ) << std::endl;
-	std::cout << "max( a, b ) = " << ::max( a, b ) << std::endl;
-
-	std::string c = "chaine1";
-	std::string d = "chaine2";
-
-	::swap(c, d);
-	std::cout << "c = " << c << ", d = " << d << std::endl;
-	std::cout << "min( c, d ) = " << ::min( c, d ) << std::endl;
-	std::cout << "max( c, d ) = " << ::max( c, d ) << std::endl;
-	
 	return 0;
 }

@@ -5,30 +5,36 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/14 16:00:19 by tolanini          #+#    #+#             */
-/*   Updated: 2026/04/14 16:07:43 by tolanini         ###   ########.fr       */
+/*   Created: 2026/04/20 02:15:31 by tolanini          #+#    #+#             */
+/*   Updated: 2026/04/20 02:15:59 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "whatever.hpp"
+#include "Array.hpp"
 
-int main() {
+int main () {
+	Array<int> intArray(5);
+	Array<std::string> stringArray(3);
 
-	int a = 2;
-	int b = 3;
+	for (unsigned int i = 0; i < intArray.size(); i++) {
+		intArray[i] = i + 1;
+	}
 
-	::swap( a, b );
-	std::cout << "a = " << a << ", b = " << b << std::endl;
-	std::cout << "min( a, b ) = " << ::min( a, b ) << std::endl;
-	std::cout << "max( a, b ) = " << ::max( a, b ) << std::endl;
+	stringArray[0] = "Hello";
+	stringArray[1] = "World";
+	stringArray[2] = "!";
 
-	std::string c = "chaine1";
-	std::string d = "chaine2";
+	std::cout << "Integer Array: ";
+	for (unsigned int i = 0; i < intArray.size(); i++) {
+		std::cout << intArray[i] << " ";
+	}
+	std::cout << std::endl;
 
-	::swap(c, d);
-	std::cout << "c = " << c << ", d = " << d << std::endl;
-	std::cout << "min( c, d ) = " << ::min( c, d ) << std::endl;
-	std::cout << "max( c, d ) = " << ::max( c, d ) << std::endl;
-	
+	std::cout << "String Array: ";
+	for (unsigned int i = 0; i < stringArray.size(); i++) {
+		std::cout << stringArray[i] << " ";
+	}
+	std::cout << std::endl;
+
 	return 0;
 }
