@@ -15,21 +15,24 @@
 
 #include <iostream>
 #include <fstream>
+#include <map>
+#include <string>
+#include <cstdlib>
 
 class BitcoinExchange {
 	private:
-		std::map<int, float> map;s
+		std::map<std::string, float> database;
 	public:
 		BitcoinExchange();
 		BitcoinExchange(const BitcoinExchange &other);
 		BitcoinExchange &operator=(const BitcoinExchange &other);
 		~BitcoinExchange();
-		
+
 		class FileNotFoundException : public std::exception {
 				virtual const char* what() const throw();
 		};
 
-		
+		void calculate(const std::string &filename) const;
 };
 
 #endif
