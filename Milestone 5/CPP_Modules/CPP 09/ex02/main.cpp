@@ -13,15 +13,15 @@
 #include "PmergeMe.hpp"
 
 int main(int argc, char **argv) {
-	if (argc != 2) {
-		std::cerr << "Error: invalid number of arguments" << std::endl;
+	if (argc < 2) {
+		std::cerr << "Error" << std::endl;
 		return 1;
 	}
 	try {
 		PmergeMe pmergeMe;
-		pmergeMe.process(argv[1]);
+		pmergeMe.process(argc - 1, argv + 1);
 	} catch (const std::exception &e) {
-		std::cerr << "Error: " << e.what() << std::endl;
+		std::cerr << "Error" << std::endl;
 		return 1;
 	}
 	return 0;
