@@ -24,36 +24,6 @@ Server::~Server() {
 	}
 }
 
-void Server::run() {
-	struct pollfd listen_pollfd;
-	listen_pollfd.fd = _listen_fd;
-	listen_pollfd.events = POLLIN;
-	listen_pollfd.revents = 0;
-	_poll_fds.push_back(listen_pollfd);
-
-	std::cout << "IRC Server is running on port " << _port << std::endl;
-
-	while (true) {
-		int poll_count = poll(&_poll_fds[0], _poll_fds.size(), -1);
-		if (poll_count == -1) {
-			throw std::runtime_error("Poll error");
-		}
-		
-		for (size_t i = 0; i < _poll_fds.size(); ++i) {
-			if (_poll_fds[i].revents & POLLIN) {
-				if (_poll_fds[i].fd == _listen_fd) {
-					handleNewConnection();
-				} else {
-					size_t current_size = _poll_fds.size();
-					handleClientMessage(i);
-					if (_poll_fds.size() < current_size)
-						--i;
-				}
-			}
-		}
-	}
-}
-
 void Server::initServer() {
 	_listen_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (_listen_fd == -1) {
@@ -82,6 +52,36 @@ void Server::initServer() {
 
 	if (listen(_listen_fd, SOMAXCONN) == -1) {
 		throw std::runtime_error("Failed to listen on socket");
+	}
+}
+
+void Server::run() {
+	struct pollfd listen_pollfd;
+	listen_pollfd.fd = _listen_fd;
+	listen_pollfd.events = POLLIN;
+	listen_pollfd.revents = 0;
+	_poll_fds.push_back(listen_pollfd);
+
+	std::cout << "IRC Server is running on port " << _port << std::endl;
+
+	while (true) {
+		int poll_count = poll(&_poll_fds[0], _poll_fds.size(), -1);
+		if (poll_count == -1) {
+			throw std::runtime_error("Poll error");
+		}
+		
+		for (size_t i = 0; i < _poll_fds.size(); ++i) {
+			if (_poll_fds[i].revents & POLLIN) {
+				if (_poll_fds[i].fd == _listen_fd) {
+					handleNewConnection();
+				} else {
+					size_t current_size = _poll_fds.size();
+					handleClientMessage(i);
+					if (_poll_fds.size() < current_size)
+						--i;
+				}
+			}
+		}
 	}
 }
 

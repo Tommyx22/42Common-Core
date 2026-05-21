@@ -12,11 +12,6 @@
 
 #include "Server.hpp"
 
-#include <iostream>
-#include <climits>
-#include <cctype>
-#include <sstream>
-
 static bool isValidPort(const char *arg, int &port)
 {
 	if (arg == NULL || *arg == '\0')

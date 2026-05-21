@@ -24,6 +24,7 @@
 #include <vector>
 #include <iostream>
 #include <stdexcept>
+#include <sstream>
 
 class Server {
 public:
