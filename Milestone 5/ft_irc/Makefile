@@ -6,7 +6,7 @@
 #    By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/20 15:12:23 by tolanini          #+#    #+#              #
-#    Updated: 2026/05/20 15:45:19 by tolanini         ###   ########.fr        #
+#    Updated: 2026/05/22 17:47:22 by tolanini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,8 @@ CPP = c++
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 
 SRC = main.cpp \
-	  Server.cpp
+	  Server.cpp \
+	  User.cpp
 OBJ = $(SRC:.cpp=.o)
 
 all: $(NAME)

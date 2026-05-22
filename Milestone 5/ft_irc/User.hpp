@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Server.hpp                                         :+:      :+:    :+:   */
+/*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/20 15:24:00 by tolanini          #+#    #+#             */
-/*   Updated: 2026/05/22 17:46:20 by tolanini         ###   ########.fr       */
+/*   Created: 2026/05/22 17:35:07 by tolanini          #+#    #+#             */
+/*   Updated: 2026/05/22 17:38:18 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVER_HPP
-#define SERVER_HPP
+#ifndef USER_HPP
+#define USER_HPP
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -24,29 +24,24 @@
 #include <vector>
 #include <iostream>
 #include <stdexcept>
-#include "User.hpp"
-#include <map>
 
-class Server {
-public:
-	Server();
-	Server(int port, const std::string &password);
-	~Server();
+class User {
+	private:
+		int _fd;
+		std::string _nickname;
+		std::string _password;
 
-	void run();
+	public:
+		User();
+		User(int fd, std::string nickname, std::string password);
+		~User();
 
-private:
-	int _port;
-	std::string _password;
-	int _listen_fd;
-	std::vector<struct pollfd> _poll_fds;
-	//2 mappe momentanee per poter salvare gli user
-	std::map<int, std::string> _client_buffers;
-	std::map<int, User> _users;
+		int getFd() const;
+		void setNickname(const std::string &nickname);
+		std::string getNickname() const;
+		void setPassword(const std::string &password);
+		std::string getPassword() const;
 
-	void initServer();
-	void handleNewConnection();
-	void handleClientMessage(size_t index);
-	
 };
+
 #endif

@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 15:40:00 by tolanini          #+#    #+#             */
-/*   Updated: 2026/05/20 17:48:06 by tolanini         ###   ########.fr       */
+/*   Updated: 2026/05/22 17:57:07 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,12 @@ void Server::handleNewConnection() {
 	_poll_fds.push_back(client_pollfd);
 
 	std::cout << "New client connected: " << inet_ntoa(client_address.sin_addr) << " on socket fd " << client_fd << std::endl;
+
+
+	//codice momentaneo per poter salvare gli utenti
+	User newUser(client_fd, "", ""); 
+    _users[client_fd] = newUser;
+    _client_buffers[client_fd] = "";
 }
 
 void Server::handleClientMessage(size_t index) {
@@ -116,10 +122,60 @@ void Server::handleClientMessage(size_t index) {
     if (bytes_received <= 0) {
         std::cout << "Client on socket fd " << client_fd << " disconnected." << std::endl;
         close(client_fd);
+		_users.erase(client_fd);			// Rimuoviamo l'utente dalla mappa
+        _client_buffers.erase(client_fd);	// Rimuoviamo il suo buffer
         _poll_fds.erase(_poll_fds.begin() + index);
     } 
-    else {
-        std::cout << "Received from client " << client_fd << ": " << buffer;
-        // Qui andrà la logica per accumulare nel buffer della classe Client e processare i comandi quando si riceve un \r\n
-    }
+
+    _client_buffers[client_fd] += buffer;
+    size_t pos;
+	
+    while ((pos = _client_buffers[client_fd].find('\n')) != std::string::npos) {
+			
+		// Estraiamo la singola riga di comando (es. "NICK Pippo\r")
+		std::string command_line = _client_buffers[client_fd].substr(0, pos);
+			
+		// Rimuoviamo la riga appena presa dal buffer residuo
+		_client_buffers[client_fd].erase(0, pos + 1);
+
+		// Puliamo i caratteri '\r' residui di Windows/IRC se presenti
+		if (!command_line.empty() && command_line[command_line.size() - 1] == '\r') {
+			command_line.erase(command_line.size() - 1);
+		}
+			
+		// --- INIZIO LOGICA PARSING DI DEBUG ---
+		// HexChat invia comandi del tipo: "NICK nome" o "PASS password"
+		if (command_line.find("PASS ") == 0) {
+			std::string pass = command_line.substr(5);
+			_users[client_fd].setPassword(pass);
+		}
+		else if (command_line.find("NICK ") == 0) {
+			std::string nick = command_line.substr(5);
+			_users[client_fd].setNickname(nick);
+		}
+
+		// STAMPA DI DEBUG
+		std::cout << "====== DEBUG USER (fd: " << client_fd << ") ======" << std::endl;
+		std::cout << "Raw Command: [" << command_line << "]" << std::endl;
+		std::cout << "Stored Nickname: " << _users[client_fd].getNickname() << std::endl;
+		std::cout << "Stored Password: " << _users[client_fd].getPassword() << std::endl;
+		std::cout << "========================================" << std::endl;
+			
+		// Se abbiamo sia Nickname che Password, possiamo mandargli il famoso codice 001
+		// per sbloccare l'interfaccia grafica di HexChat!
+		if (!_users[client_fd].getNickname().empty() && !_users[client_fd].getPassword().empty()) {
+			std::string welcome = ":my_server 001 " + _users[client_fd].getNickname() + " :Welcome to ft_irc!\r\n";
+			send(client_fd, welcome.c_str(), welcome.length(), 0);
+		}
+		
+		
+		//codice originale
+		// else {
+		// 	std::cout << "Received from client " << client_fd << ": " << buffer;
+			
+		// 	std::string welcome = ":my_irc_server 001 guest :Welcome to the IRC server!\r\n";
+		
+		// 	send(client_fd, welcome.c_str(), welcome.length(), 0);
+		// }
+	}
 }
