@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 15:24:00 by tolanini          #+#    #+#             */
-/*   Updated: 2026/05/22 17:46:20 by tolanini         ###   ########.fr       */
+/*   Updated: 2026/05/22 18:01:42 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 #include <stdexcept>
 #include "User.hpp"
 #include <map>
+#include <sstream>
 
 class Server {
 public:
