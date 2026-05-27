@@ -107,7 +107,7 @@ void Server::handleNewConnection() {
 
 
 	//codice momentaneo per poter salvare gli utenti
-	User newUser(client_fd, "", ""); 
+	User newUser(client_fd, "", "", ""); 
     _users[client_fd] = newUser;
     _client_buffers[client_fd] = "";
 }
@@ -125,16 +125,17 @@ void Server::handleClientMessage(size_t index) {
 		_users.erase(client_fd);			// Rimuoviamo l'utente dalla mappa
         _client_buffers.erase(client_fd);	// Rimuoviamo il suo buffer
         _poll_fds.erase(_poll_fds.begin() + index);
+		return;
     } 
 
     _client_buffers[client_fd] += buffer;
     size_t pos;
 	
     while ((pos = _client_buffers[client_fd].find('\n')) != std::string::npos) {
-			
+
 		// Estraiamo la singola riga di comando (es. "NICK Pippo\r")
 		std::string command_line = _client_buffers[client_fd].substr(0, pos);
-			
+
 		// Rimuoviamo la riga appena presa dal buffer residuo
 		_client_buffers[client_fd].erase(0, pos + 1);
 
@@ -145,37 +146,44 @@ void Server::handleClientMessage(size_t index) {
 			
 		// --- INIZIO LOGICA PARSING DI DEBUG ---
 		// HexChat invia comandi del tipo: "NICK nome" o "PASS password"
+
+		// vediamo se la password é corretta (per ora lo facciamo qui)
 		if (command_line.find("PASS ") == 0) {
-			std::string pass = command_line.substr(5);
-			_users[client_fd].setPassword(pass);
-		}
-		else if (command_line.find("NICK ") == 0) {
+			std::string client_pass = command_line.substr(5);
+
+			_users[client_fd].setPassword(client_pass);
+			
+			if (client_pass == _password) {
+				_users[client_fd].setHasProvidedPass(true);
+				std::cout << "[DEBUG] Password corretta per fd " << client_fd << std::endl;
+			} else {
+				// Se la password è errata, possiamo decidere di chiudere subito la connessione o semplicemente ignorare i comandi futuri
+				// Per ora, stampiamo un messaggio di debug e ignoriamo i comandi
+				std::cout << "[DEBUG] Password REGISTRATA ERRATA per fd " << client_fd << std::endl;
+			}
+		} else if (command_line.find("NICK ") == 0) {
 			std::string nick = command_line.substr(5);
 			_users[client_fd].setNickname(nick);
+		} else if (command_line.find("USER ") == 0) {
+			// Qui andrà il parsing del comando USER
+			std::cout << "[DEBUG] Ricevuto comando USER: " << command_line << std::endl;
 		}
 
 		// STAMPA DI DEBUG
 		std::cout << "====== DEBUG USER (fd: " << client_fd << ") ======" << std::endl;
-		std::cout << "Raw Command: [" << command_line << "]" << std::endl;
-		std::cout << "Stored Nickname: " << _users[client_fd].getNickname() << std::endl;
-		std::cout << "Stored Password: " << _users[client_fd].getPassword() << std::endl;
-		std::cout << "========================================" << std::endl;
+        std::cout << "Raw Command: [" << command_line << "]" << std::endl;
+        std::cout << "Stored Nickname: " << _users[client_fd].getNickname() << std::endl;
+        std::cout << "Password inserita: " << _users[client_fd].getPassword() << std::endl;
+		std::cout << "Username inserito: " << _users[client_fd].getUsername() << std::endl;
+		std::cout << "Realname inserito: " << _users[client_fd].getRealname() << std::endl;
+        std::cout << "Stato Autenticazione: " << (_users[client_fd].getHasProvidedPass() ? "SI" : "NO") << std::endl;
+        std::cout << "========================================" << std::endl;
 			
 		// Se abbiamo sia Nickname che Password, possiamo mandargli il famoso codice 001
 		// per sbloccare l'interfaccia grafica di HexChat!
-		if (!_users[client_fd].getNickname().empty() && !_users[client_fd].getPassword().empty()) {
+		if (!_users[client_fd].getNickname().empty() && _users[client_fd].getHasProvidedPass() == true) {
 			std::string welcome = ":my_server 001 " + _users[client_fd].getNickname() + " :Welcome to ft_irc!\r\n";
 			send(client_fd, welcome.c_str(), welcome.length(), 0);
 		}
-		
-		
-		//codice originale
-		// else {
-		// 	std::cout << "Received from client " << client_fd << ": " << buffer;
-			
-		// 	std::string welcome = ":my_irc_server 001 guest :Welcome to the IRC server!\r\n";
-		
-		// 	send(client_fd, welcome.c_str(), welcome.length(), 0);
-		// }
 	}
 }

@@ -29,19 +29,30 @@ class User {
 	private:
 		int _fd;
 		std::string _nickname;
+		std::string _username;
+		std::string _realname;
 		std::string _password;
+		bool _isRegistered;
+		bool _hasProvidedPass;
 
 	public:
 		User();
-		User(int fd, std::string nickname, std::string password);
+		User(int fd, std::string nickname, std::string username, std::string realname);
 		~User();
 
 		int getFd() const;
 		void setNickname(const std::string &nickname);
 		std::string getNickname() const;
+		void setUsername(const std::string &username);
+		std::string getUsername() const;
+		void setRealname(const std::string &realname);
+		std::string getRealname() const;
 		void setPassword(const std::string &password);
 		std::string getPassword() const;
-
+		void setHasProvidedPass(bool hasProvided);
+		bool getHasProvidedPass() const;
+		void setIsRegistered(bool isRegistered);
+		bool getIsRegistered() const;
 };
 
 #endif
