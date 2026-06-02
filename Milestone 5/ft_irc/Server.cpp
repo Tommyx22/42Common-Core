@@ -105,8 +105,6 @@ void Server::handleNewConnection() {
 
 	std::cout << "New client connected: " << inet_ntoa(client_address.sin_addr) << " on socket fd " << client_fd << std::endl;
 
-
-	//codice momentaneo per poter salvare gli utenti
 	User newUser(client_fd, "", "", ""); 
     _users[client_fd] = newUser;
     _client_buffers[client_fd] = "";
@@ -122,8 +120,8 @@ void Server::handleClientMessage(size_t index) {
     if (bytes_received <= 0) {
         std::cout << "Client on socket fd " << client_fd << " disconnected." << std::endl;
         close(client_fd);
-		_users.erase(client_fd);			// Rimuoviamo l'utente dalla mappa
-        _client_buffers.erase(client_fd);	// Rimuoviamo il suo buffer
+		_users.erase(client_fd);
+        _client_buffers.erase(client_fd);
         _poll_fds.erase(_poll_fds.begin() + index);
 		return;
     } 
@@ -133,41 +131,18 @@ void Server::handleClientMessage(size_t index) {
 	
     while ((pos = _client_buffers[client_fd].find('\n')) != std::string::npos) {
 
-		// Estraiamo la singola riga di comando (es. "NICK Pippo\r")
 		std::string command_line = _client_buffers[client_fd].substr(0, pos);
-
-		// Rimuoviamo la riga appena presa dal buffer residuo
 		_client_buffers[client_fd].erase(0, pos + 1);
 
-		// Puliamo i caratteri '\r' residui di Windows/IRC se presenti
 		if (!command_line.empty() && command_line[command_line.size() - 1] == '\r') {
 			command_line.erase(command_line.size() - 1);
 		}
-			
-		// --- INIZIO LOGICA PARSING DI DEBUG ---
-		// HexChat invia comandi del tipo: "NICK nome" o "PASS password"
 
-		// vediamo se la password é corretta (per ora lo facciamo qui)
-		if (command_line.find("PASS ") == 0) {
-			std::string client_pass = command_line.substr(5);
+		if (!processCommand(client_fd, command_line, index))
+			return;
+		
 
-			_users[client_fd].setPassword(client_pass);
-			
-			if (client_pass == _password) {
-				_users[client_fd].setHasProvidedPass(true);
-				std::cout << "[DEBUG] Password corretta per fd " << client_fd << std::endl;
-			} else {
-				// Se la password è errata, possiamo decidere di chiudere subito la connessione o semplicemente ignorare i comandi futuri
-				// Per ora, stampiamo un messaggio di debug e ignoriamo i comandi
-				std::cout << "[DEBUG] Password REGISTRATA ERRATA per fd " << client_fd << std::endl;
-			}
-		} else if (command_line.find("NICK ") == 0) {
-			std::string nick = command_line.substr(5);
-			_users[client_fd].setNickname(nick);
-		} else if (command_line.find("USER ") == 0) {
-			// Qui andrà il parsing del comando USER
-			std::cout << "[DEBUG] Ricevuto comando USER: " << command_line << std::endl;
-		}
+		userRegistration(client_fd);
 
 		// STAMPA DI DEBUG
 		std::cout << "====== DEBUG USER (fd: " << client_fd << ") ======" << std::endl;
@@ -178,12 +153,155 @@ void Server::handleClientMessage(size_t index) {
 		std::cout << "Realname inserito: " << _users[client_fd].getRealname() << std::endl;
         std::cout << "Stato Autenticazione: " << (_users[client_fd].getHasProvidedPass() ? "SI" : "NO") << std::endl;
         std::cout << "========================================" << std::endl;
-			
-		// Se abbiamo sia Nickname che Password, possiamo mandargli il famoso codice 001
-		// per sbloccare l'interfaccia grafica di HexChat!
-		if (!_users[client_fd].getNickname().empty() && _users[client_fd].getHasProvidedPass() == true) {
-			std::string welcome = ":my_server 001 " + _users[client_fd].getNickname() + " :Welcome to ft_irc!\r\n";
-			send(client_fd, welcome.c_str(), welcome.length(), 0);
+	}
+}
+
+bool Server::processCommand(int client_fd, std::string line, int index) {
+
+	if (line.empty())
+		return true;
+
+	size_t space_pos = line.find(' ');
+	std::string command;
+	std::string args;
+
+	if (space_pos != std::string::npos) {
+		command = line.substr(0, space_pos);
+		args = line.substr(space_pos + 1);
+	} else {
+		command = line;
+	}
+
+	if (command == "PASS") {
+
+		if (_password.empty()) {
+			std::cout << "[DEBUG] Il server non richiede password. Ignoro il PASS inviato." << std::endl;
+            _users[client_fd].setHasProvidedPass(true);
+            return true;
 		}
+
+		if (args.empty()) {
+			std::cout << "[DEBUG] Nessuna password fornita per fd " << client_fd << std::endl;
+			std::string error_msg = ":ft_irc.local 461 * PASS :Not enough parameters\r\n";
+			send(client_fd, error_msg.c_str(), error_msg.length(), 0);
+
+			close(client_fd);
+			_users.erase(client_fd);
+			_client_buffers.erase(client_fd);
+			_poll_fds.erase(_poll_fds.begin() + index);
+			return false;
+		}
+
+		_users[client_fd].setPassword(args);
+		
+		if (args == _password) {
+			_users[client_fd].setHasProvidedPass(true);
+			std::cout << "[DEBUG] Password corretta per fd " << client_fd << std::endl;
+		} else {
+			std::cout << "[DEBUG] Password REGISTRATA ERRATA per fd " << client_fd << std::endl;
+			std::string error_msg = ":ft_irc.local 464 * :Password incorrect\r\n";
+			send(client_fd, error_msg.c_str(), error_msg.length(), 0);
+
+			close(client_fd);
+			_users.erase(client_fd);
+			_client_buffers.erase(client_fd);
+			_poll_fds.erase(_poll_fds.begin() + index);
+			return false;
+		}
+	} else if (command == "NICK") {
+		
+		if (!_password.empty() && !_users[client_fd].getHasProvidedPass()) {
+			std::string error_msg = ":ft_irc.local 464 * :Password required before setting nickname\r\n";
+			send(client_fd, error_msg.c_str(), error_msg.length(), 0);
+
+			close(client_fd);
+			_users.erase(client_fd);
+			_client_buffers.erase(client_fd);
+			_poll_fds.erase(_poll_fds.begin() + index);
+			return false;
+		}
+
+		if (args.empty()) {
+			std::string error_msg = ":ft_irc.local 431 * :No nickname given\r\n";
+			send(client_fd, error_msg.c_str(), error_msg.length(), 0);
+			return true;
+		}
+			_users[client_fd].setNickname(args);
+	} else if (command == "USER") {
+
+		if (!_password.empty() && !_users[client_fd].getHasProvidedPass()) {
+			std::string error_msg = ":ft_irc.local 464 * :Password required before setting user information\r\n";
+			send(client_fd, error_msg.c_str(), error_msg.length(), 0);
+
+			close(client_fd);
+			_users.erase(client_fd);
+			_client_buffers.erase(client_fd);
+			_poll_fds.erase(_poll_fds.begin() + index);
+			return false;
+		}
+
+		if (args.empty()) {
+			std::cout << "[DEBUG] Nessun argomento fornito per comando USER su fd " << client_fd << std::endl;
+			std::string error_msg = ":ft_irc.local 461 * USER :Not enough parameters\r\n";
+			send(client_fd, error_msg.c_str(), error_msg.length(), 0);
+			return true;
+		}
+		
+		size_t colon_pos = args.find(':');
+		std::string realname = "";
+		std::string remaining = args;
+
+		if (colon_pos != std::string::npos) {
+			realname = args.substr(colon_pos + 1);
+			remaining = args.substr(0, colon_pos);
+		}
+
+		std::stringstream ss(remaining);
+		std::string username;
+
+		ss >> username;
+
+		if (username.empty() || realname.empty()) {
+			std::cout << "[DEBUG] Parametri insufficienti per comando USER su fd " << client_fd << std::endl;
+			std::string error_msg = ":ft_irc.local 461 * USER :Not enough parameters\r\n";
+			send(client_fd, error_msg.c_str(), error_msg.length(), 0);
+			return true;
+		}
+
+		_users[client_fd].setUsername(username);
+		_users[client_fd].setRealname(realname);
+	} else {
+		std::cout << "[DEBUG] Comando non ancora implementato" << std::endl;
+	}
+
+	return true;
+}
+
+void Server::userRegistration(int client_fd) {
+	if (_users[client_fd].getIsRegistered() == false &&
+		_users[client_fd].getHasProvidedPass() == true &&
+		!_users[client_fd].getNickname().empty() &&
+		!_users[client_fd].getUsername().empty() &&
+		!_users[client_fd].getRealname().empty()) {
+
+		_users[client_fd].setIsRegistered(true);
+
+		std::string server_name = "ft_irc.local";
+		std::string nick = _users[client_fd].getNickname();
+		std::string user_ip = nick + "!" + _users[client_fd].getUsername() + "@127.0.0.1";
+
+		std::string welcome_message;
+
+		welcome_message += ":" + server_name + " 001 " + nick + " :Welcome to the Internet Relay Network " + user_ip + "\r\n";
+
+        welcome_message += ":" + server_name + " 002 " + nick + " :Your host is " + server_name + ", running version 1.0\r\n";
+        
+        welcome_message += ":" + server_name + " 003 " + nick + " :This server was created Tue Jun 02 2026\r\n";
+        
+        welcome_message += ":" + server_name + " 004 " + nick + " " + server_name + " 1.0 o o\r\n";
+
+		send(client_fd, welcome_message.c_str(), welcome_message.length(), 0);
+
+		std::cout << "[SERVER] User " << nick << " successfully registered!" << std::endl;
 	}
 }

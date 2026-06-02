@@ -48,6 +48,8 @@ private:
 	void initServer();
 	void handleNewConnection();
 	void handleClientMessage(size_t index);
+	bool processCommand(int client_fd, std::string line, int index);
+	void userRegistration(int client_fd);
 	
 };
 #endif
