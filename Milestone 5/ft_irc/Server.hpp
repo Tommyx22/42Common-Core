@@ -50,6 +50,7 @@ private:
 	void handleClientMessage(size_t index);
 	bool processCommand(int client_fd, std::string line, int index);
 	void userRegistration(int client_fd);
+	void handlePrivmsg(int client_fd, std::string &args);
 	
 };
 #endif

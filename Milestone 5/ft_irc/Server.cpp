@@ -222,7 +222,8 @@ bool Server::processCommand(int client_fd, std::string line, int index) {
 		}
 
 		if (args.empty()) {
-			std::string error_msg = ":ft_irc.local 431 * :No nickname given\r\n";
+			std::string current_nick = _users[client_fd].getNickname().empty() ? "*" : _users[client_fd].getNickname();
+			std::string error_msg = ":ft_irc.local 431 " + current_nick + " :No nickname given\r\n";
 			send(client_fd, error_msg.c_str(), error_msg.length(), 0);
 			return true;
 		}
@@ -242,7 +243,7 @@ bool Server::processCommand(int client_fd, std::string line, int index) {
 
 		if (args.empty()) {
 			std::cout << "[DEBUG] Nessun argomento fornito per comando USER su fd " << client_fd << std::endl;
-			std::string error_msg = ":ft_irc.local 461 * USER :Not enough parameters\r\n";
+			std::string error_msg = ":ft_irc.local 461 " + _users[client_fd].getNickname() + " USER :Not enough parameters\r\n";
 			send(client_fd, error_msg.c_str(), error_msg.length(), 0);
 			return true;
 		}
@@ -263,13 +264,23 @@ bool Server::processCommand(int client_fd, std::string line, int index) {
 
 		if (username.empty() || realname.empty()) {
 			std::cout << "[DEBUG] Parametri insufficienti per comando USER su fd " << client_fd << std::endl;
-			std::string error_msg = ":ft_irc.local 461 * USER :Not enough parameters\r\n";
+			std::string error_msg = ":ft_irc.local 461 " + _users[client_fd].getNickname() + " USER :Not enough parameters\r\n";
 			send(client_fd, error_msg.c_str(), error_msg.length(), 0);
 			return true;
 		}
 
 		_users[client_fd].setUsername(username);
 		_users[client_fd].setRealname(realname);
+	} else if (command == "PRIVMSG") {
+
+		if (!_users[client_fd].getIsRegistered()) {
+			std::string error_msg = ":ft_irc.local 451 * :You have not registered\r\n";
+			send(client_fd, error_msg.c_str(), error_msg.length(), 0);
+			return true;
+		}
+
+		handlePrivmsg(client_fd, args);
+
 	} else {
 		std::cout << "[DEBUG] Comando non ancora implementato" << std::endl;
 	}
@@ -303,5 +314,63 @@ void Server::userRegistration(int client_fd) {
 		send(client_fd, welcome_message.c_str(), welcome_message.length(), 0);
 
 		std::cout << "[SERVER] User " << nick << " successfully registered!" << std::endl;
+	}
+}
+
+void Server::handlePrivmsg(int client_fd, std::string &args) {
+	// Controllo se il client è registrato
+	if (args.empty()) {
+		std::string error_msg = ":ft_irc.local 411 " + _users[client_fd].getNickname() + " :No recipient given (PRIVMSG)\r\n";
+		send(client_fd, error_msg.c_str(), error_msg.length(), 0);
+		return;
+	}
+
+	// Separazione del target e del messaggio
+	size_t space_pos = args.find(' ');
+	if (space_pos == std::string::npos) {
+		std::string error_msg = ":ft_irc.local 412 " + _users[client_fd].getNickname() + " :No text to send\r\n";
+		send(client_fd, error_msg.c_str(), error_msg.length(), 0);
+		return;
+	}
+
+	std::string target = args.substr(0, space_pos);
+	std::string message = args.substr(space_pos + 1);
+
+	// Rimozione del prefisso ':' se presente
+	if (!message.empty() && message[0] == ':')
+		message = message.substr(1);
+	// Controllo se il messaggio è vuoto dopo la rimozione del prefisso ':'
+	if (message.empty()) {
+		std::string error_msg = ":ft_irc.local 412 " + _users[client_fd].getNickname() + " :No text to send\r\n";
+		send(client_fd, error_msg.c_str(), error_msg.length(), 0);
+		return;
+	}
+
+	// --- INVIO DEL MESSAGGIO PRIVATO DA UTENTE A UTENTE ---
+
+	if (target[0] != '#') {
+		int target_fd = -1;
+		
+		std::map<int, User>::iterator it;
+		for (it = _users.begin(); it != _users.end(); ++it) {
+			if (it->second.getNickname() == target) {
+				target_fd = it->first;
+				break;
+			}	
+		}
+
+		if (target_fd == -1) {
+			std::string error_msg = ":ft_irc.local 401 " + _users[client_fd].getNickname() + " " + target + " :No such nick\r\n";
+			send(client_fd, error_msg.c_str(), error_msg.length(), 0);
+			return;
+		}
+
+		std::string sender_mask = _users[client_fd].getNickname() + "!" + _users[client_fd].getUsername() + "@127.0.0.1";
+		std::string privmsg = ":" + sender_mask + " PRIVMSG " + target + " :" + message + "\r\n";
+
+		send(target_fd, privmsg.c_str(), privmsg.length(), 0);
+		std::cout << "[PRIVMSG] Da " << _users[client_fd].getNickname() << " a " << target << ": [" << message << "]" << std::endl;
+	} else {
+		// --- GESTIONE DEI MESSAGGI PRIVATI A CANALI (NON IMPLEMENTATO) ---
 	}
 }
