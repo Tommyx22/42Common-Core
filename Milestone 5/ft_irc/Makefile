@@ -16,7 +16,9 @@ CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 
 SRC = main.cpp \
 	  Server.cpp \
-	  User.cpp
+	  User.cpp \
+	  Channel.cpp \
+	  Command.cpp
 OBJ = $(SRC:.cpp=.o)
 
 all: $(NAME)

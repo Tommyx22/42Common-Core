@@ -27,6 +27,7 @@
 #include "User.hpp"
 #include <map>
 #include <sstream>
+#include "Channel.hpp"
 
 class Server {
 public:
@@ -41,16 +42,19 @@ private:
 	std::string _password;
 	int _listen_fd;
 	std::vector<struct pollfd> _poll_fds;
-	//2 mappe momentanee per poter salvare gli user
 	std::map<int, std::string> _client_buffers;
 	std::map<int, User> _users;
+	std::map<std::string, Channel> _channels;
 
 	void initServer();
 	void handleNewConnection();
 	void handleClientMessage(size_t index);
 	bool processCommand(int client_fd, std::string line, int index);
 	void userRegistration(int client_fd);
-	void handlePrivmsg(int client_fd, std::string &args);
-	
+	bool privmsg(int client_fd, std::string &args);
+	bool pass(int client_fd, std::string &args, int index);
+	bool nick(int client_fd, std::string &args, int index);
+	bool user(int client_fd, std::string &args, int index);
+	bool join(int client_fd, std::string &args);
 };
 #endif

@@ -15,6 +15,7 @@
 User::User() : _fd(-1), _nickname(""), _username(""), _realname(""), _password(""), _isRegistered(false), _hasProvidedPass(false) {}
 
 User::User(int fd, std::string nickname, std::string username, std::string realname) : _fd(fd), _nickname(nickname), _username(username), _realname(realname), _password(""), _isRegistered(false), _hasProvidedPass(false) {}
+
 User::~User() {}
 
 int User::getFd() const {
