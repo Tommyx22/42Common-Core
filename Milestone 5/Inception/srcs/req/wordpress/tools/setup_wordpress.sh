@@ -1,54 +1,48 @@
+#!/bin/bash
 set -e
 
-WP_PATH="/var/www/html"
+WP_PATH="/var/www/wordpress"
 
-if [ -n "$WORDPRESS_DB_PASSWORD_FILE" ] && [ -f "$WORDPRESS_DB_PASSWORD_FILE" ]; then
-    WORDPRESS_DB_PASSWORD=$(cat "$WORDPRESS_DB_PASSWORD_FILE")
-    export WORDPRESS_DB_PASSWORD
+if [ -f "$WORDPRESS_DB_PASSWORD_FILE" ]; then
+    MYSQL_PASSWORD=$(cat "$WORDPRESS_DB_PASSWORD_FILE")
 fi
 
-echo "Setting up WordPress..."
+while ! mariadb-admin ping -h"$MYSQL_HOST" -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --silent; do
+    sleep 2
+done
 
 if [ ! -f "$WP_PATH/wp-config.php" ]; then
-    echo "Downloading WordPress..."
-    curl -o /tmp/wordpress.tar.gz https://wordpress.org/latest.tar.gz
-    tar -xzf /tmp/wordpress.tar.gz -C /tmp
-    cp -rn /tmp/wordpress/* "$WP_PATH/"
-    rm -rf /tmp/wordpress /tmp/wordpress.tar.gz
+    echo "Configurazione automatica di WordPress con WP-CLI..."
 
-    echo "Configuring WordPress..."
+    wp core download --path="$WP_PATH" --allow-root
 
-    WP_SALTS=$(wget -qO- https://api.wordpress.org/secret-key/1.1/salt/)
+    wp config create \
+        --path="$WP_PATH" \
+        --dbname="$MYSQL_DATABASE" \
+        --dbuser="$MYSQL_USER" \
+        --dbpass="$MYSQL_PASSWORD" \
+        --dbhost="$MYSQL_HOST" \
+        --allow-root
 
-    cat > "$WP_PATH/wp-config.php" << EOF
-<?php
-define('DB_NAME', '${WORDPRESS_DB_NAME}');
-define('DB_USER', '${WORDPRESS_DB_USER}');
-define('DB_PASSWORD', '${WORDPRESS_DB_PASSWORD}');
-define('DB_HOST', '${WORDPRESS_DB_HOST}');
-define('DB_CHARSET', 'utf8');
-define('DB_COLLATE', '');
+    wp core install \
+        --path="$WP_PATH" \
+        --url="https://$DOMAIN_NAME" \
+        --title="$WORDPRESS_TITLE" \
+        --admin_user="$WORDPRESS_ADMIN_USER" \
+        --admin_password="$WORDPRESS_ADMIN_PASSWORD" \
+        --admin_email="$WORDPRESS_ADMIN_EMAIL" \
+        --skip-email \
+        --allow-root
 
-\$table_prefix = '${WORDPRESS_TABLE_PREFIX:-wp_}';
+    wp user create \
+        "$WORDPRESS_USER" \
+        "$WORDPRESS_USER_EMAIL" \
+        --path="$WP_PATH" \
+        --role=author \
+        --user_pass="$WORDPRESS_USER_PASSWORD" \
+        --allow-root
 
-${WP_SALTS}
-
-define('WP_DEBUG', false);
-
-if ( !defined('ABSPATH') )
-    define('ABSPATH', __DIR__ . '/');
-
-require_once ABSPATH . 'wp-settings.php';
-EOF
-
-    find "$WP_PATH" -type d -exec chmod 750 {} \;
-    find "$WP_PATH" -type f -exec chmod 640 {} \;
     chown -R www-data:www-data "$WP_PATH"
-
-    echo "WordPress setup complete."
-else
-    echo "WordPress is already set up."
 fi
 
-echo "Starting PHP-FPM..."
-exec php-fpm8.2 -F
+exec "$@"
