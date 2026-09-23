@@ -25,7 +25,7 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 
 RUN mkdir -p /run/php && chown -R www-data:www-data /run/php
 
-WORKDIR /var/www/wordpress
+WORKDIR /var/www/html
 
 COPY conf/www.conf /etc/php/8.2/fpm/pool.d/www.conf
 COPY tools/setup_wordpress.sh /usr/local/bin/setup_wordpress.sh

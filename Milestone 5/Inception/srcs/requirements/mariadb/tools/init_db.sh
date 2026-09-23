@@ -3,6 +3,14 @@ set -e
 
 DATA_DIR="/var/lib/mysql"
 
+if [ -f "$MYSQL_ROOT_PASSWORD_FILE" ]; then
+    MYSQL_ROOT_PASSWORD=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
+fi
+ 
+if [ -f "$MYSQL_PASSWORD_FILE" ]; then
+    MYSQL_PASSWORD=$(cat "$MYSQL_PASSWORD_FILE")
+fi
+
 if [ ! -d "$DATA_DIR/mysql" ]; then
     echo "[MariaDB] Prima esecuzione rilevata: Inizializzazione dati e configurazione credenziali..."
 

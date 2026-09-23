@@ -1,10 +1,18 @@
 #!/bin/bash
 set -e
 
-WP_PATH="/var/www/wordpress"
+WP_PATH="/var/www/html"
 
 if [ -f "$WORDPRESS_DB_PASSWORD_FILE" ]; then
     MYSQL_PASSWORD=$(cat "$WORDPRESS_DB_PASSWORD_FILE")
+fi
+ 
+if [ -f "$WORDPRESS_ADMIN_PASSWORD_FILE" ]; then
+    WORDPRESS_ADMIN_PASSWORD=$(cat "$WORDPRESS_ADMIN_PASSWORD_FILE")
+fi
+ 
+if [ -f "$WORDPRESS_USER_PASSWORD_FILE" ]; then
+    WORDPRESS_USER_PASSWORD=$(cat "$WORDPRESS_USER_PASSWORD_FILE")
 fi
 
 while ! mariadb-admin ping -h"$MYSQL_HOST" -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --silent; do

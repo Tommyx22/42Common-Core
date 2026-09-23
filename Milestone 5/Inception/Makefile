@@ -1,8 +1,8 @@
 COMPOSE_FILE = srcs/docker-compose.yml
-USER = tlanini
+USER = tolanini
 DATA_DIR = /home/$(USER)/data
 
-.PHONY: all build up down clean fclean re
+.PHONY: all build up down clean fclean re status logs
 
 all: build up
 
@@ -20,6 +20,12 @@ up:
 
 down:
 	docker compose -f $(COMPOSE_FILE) down
+
+status:
+	docker compose -f $(COMPOSE_FILE) ps
+
+logs:
+	docker compose -f $(COMPOSE_FILE) logs -f
 
 clean:
 	docker compose -f $(COMPOSE_FILE) down -v
