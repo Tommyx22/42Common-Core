@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/29 16:43:40 by tolanini          #+#    #+#             */
-/*   Updated: 2026/04/14 13:46:55 by tolanini         ###   ########.fr       */
+/*   Updated: 2026/09/23 15:10:21 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,33 @@
 
 namespace {
 	int getType(std::string str) {
-		std::string pseudo[6] = {"nan", "nanf", "+inf", "-inf", "+inff", "-inff"};
-		for (int i = 0; i < 6; i++) {
-			if (str == pseudo[i])
-				return 1;
-		}
-		if (str.length() == 1 && std::isprint(str[0]) && !std::isdigit(str[0]))
-			return 2;
-		else if (str.find('.') != std::string::npos) {
-			if (str[str.length() - 1] == 'f')
-				return 3;
-			else
-				return 4;
-		}
-		else
-			return 5;
-		return -1;
-	}
+        std::string pseudo[8] = {"nan", "nanf", "+inf", "-inf", "inf", "+inff", "-inff", "inff"};
+        for (int i = 0; i < 8; i++) {
+            if (str == pseudo[i])
+                return 1;
+        }
+        if (str.length() == 1 && std::isprint(str[0]) && !std::isdigit(str[0]))
+            return 2;
+        else if (str.find('.') != std::string::npos) {
+            if (str[str.length() - 1] == 'f')
+                return 3;
+            else
+                return 4;
+        }
+        else {
+            std::stringstream s(str);
+            double d;
+            s >> d;
+            char leftover;
+            if (s.fail() || (s >> leftover))
+                return -1;
+            if (d >= static_cast<double>(INT_MIN) && d <= static_cast<double>(INT_MAX))
+                return 5;
+            else
+                return 4;
+        }
+        return -1;
+    }
 
 	void printImpossible() {
 		std::cout << "char: impossible" << std::endl;
@@ -51,64 +61,88 @@ namespace {
 
 
 	void intType(const std::string &str) {
-		std::stringstream s(str);
-		int value;
+        std::stringstream s(str);
+        int value;
 
-		s >> std::noskipws >> value;
-		if (s.fail() || !s.eof()) {
-			printImpossible();
-			return;
-		}
-		std::cout << "char: ";
-		if (value >= 32 && value <= 126)
-			std::cout << "'" << static_cast<char>(value) << "'";
-		else
-			std::cout << "Non displayable";
-		std::cout << std::endl;
-		std::cout << "int: " << value << std::endl;
-		std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(value) << "f" << std::endl;
-		std::cout << "double: " << std::fixed << std::setprecision(1) << static_cast<double>(value) << std::endl;
-	}
+        s >> value;
+        char leftover;
+        if (s.fail() || (s >> leftover)) {
+            printImpossible();
+            return;
+        }
+        std::cout << "char: ";
+        if (value >= 32 && value <= 126)
+            std::cout << "'" << static_cast<char>(value) << "'";
+        else
+            std::cout << "Non displayable";
+        std::cout << std::endl;
+        std::cout << "int: " << value << std::endl;
+        std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(value) << "f" << std::endl;
+        std::cout << "double: " << std::fixed << std::setprecision(1) << static_cast<double>(value) << std::endl;
+    }
 
 	void floatType(const std::string &str) {
-		std::stringstream s(str);
-		float value;
+        std::string cleanStr = str.substr(0, str.length() - 1);
+        std::stringstream s(cleanStr);
+        float value;
 
-		s >> std::noskipws >> value;
-		if (s.fail() || !s.eof()) {
-			printImpossible();
-			return;
-		}
-		std::cout << "char: ";
-		if (value >= 32 && value <= 126)
-			std::cout << "'" << static_cast<char>(value) << "'";
-		else
-			std::cout << "Non displayable";
-		std::cout << std::endl;
-		std::cout << "int: " << static_cast<int>(value) << std::endl;
-		std::cout << "float: " << std::fixed << std::setprecision(1) << value << "f" << std::endl;
-		std::cout << "double: " << std::fixed << std::setprecision(1) << static_cast<double>(value) << std::endl;
-	}
+        s >> value;
+        char leftover;
+        if (s.fail() || (s >> leftover)) {
+            printImpossible();
+            return;
+        }
+
+        std::cout << "char: ";
+        if (value < 0 || value > 127 || value != value)
+            std::cout << "impossible";
+        else if (static_cast<int>(value) >= 32 && static_cast<int>(value) <= 126)
+            std::cout << "'" << static_cast<char>(value) << "'";
+        else
+            std::cout << "Non displayable";
+        std::cout << std::endl;
+
+        std::cout << "int: ";
+        if (value < static_cast<float>(INT_MIN) || value > static_cast<float>(INT_MAX) || value != value)
+            std::cout << "impossible";
+        else
+            std::cout << static_cast<int>(value);
+        std::cout << std::endl;
+
+        std::cout << "float: " << std::fixed << std::setprecision(1) << value << "f" << std::endl;
+        std::cout << "double: " << std::fixed << std::setprecision(1) << static_cast<double>(value) << std::endl;
+    }
 
 	void doubleType(const std::string &str) {
-		std::stringstream s(str);
-		double value;
+        std::stringstream s(str);
+        double value;
 
-		s >> std::noskipws >> value;
-		if (s.fail() || !s.eof()) {
-			printImpossible();
-			return;
-		}
-		std::cout << "char: ";
-		if (value >= 32 && value <= 126)
-			std::cout << "'" << static_cast<char>(value) << "'";
-		else
-			std::cout << "Non displayable";
-		std::cout << std::endl;
-		std::cout << "int: " << static_cast<int>(value) << std::endl;
-		std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(value) << "f" << std::endl;
-		std::cout << "double: " << std::fixed << std::setprecision(1) << value << std::endl;
-	}
+        s >> value;
+        char leftover;
+        if (s.fail() || (s >> leftover)) {
+            printImpossible();
+            return;
+        }
+
+        std::cout << "char: ";
+        if (value < 0 || value > 127 || value != value)
+            std::cout << "impossible";
+        else if (static_cast<int>(value) >= 32 && static_cast<int>(value) <= 126)
+            std::cout << "'" << static_cast<char>(value) << "'";
+        else
+            std::cout << "Non displayable";
+        std::cout << std::endl;
+
+        std::cout << "int: ";
+        if (value < static_cast<double>(INT_MIN) || value > static_cast<double>(INT_MAX) || value != value)
+            std::cout << "impossible";
+        else
+            std::cout << static_cast<int>(value);
+        std::cout << std::endl;
+
+        std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(value) << "f" << std::endl;
+        std::cout << "double: " << std::fixed << std::setprecision(1) << value << std::endl;
+    }
 
 
 	void pseudoType(const std::string &str) {

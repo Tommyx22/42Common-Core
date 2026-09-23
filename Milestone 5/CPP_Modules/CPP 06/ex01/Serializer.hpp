@@ -6,7 +6,7 @@
 /*   By: tolanini <tolanini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 13:48:51 by tolanini          #+#    #+#             */
-/*   Updated: 2026/04/14 14:52:08 by tolanini         ###   ########.fr       */
+/*   Updated: 2026/09/23 15:17:33 by tolanini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,17 @@ struct Data {
 	std::string name;	
 };
 
-class Serializer {
-	public:
-		Serializer();
-		Serializer(const Serializer& copy);
-		Serializer& operator=(const Serializer& copy);
-		~Serializer();
-		static uintptr_t serialize(Data* ptr);
-		static Data* deserialize(uintptr_t raw);
+class Serializer
+{
+    private:
+        Serializer();
+        Serializer(const Serializer &copy);
+        Serializer &operator=(const Serializer &copy);
+        ~Serializer();
+
+    public:
+        static uintptr_t serialize(Data* ptr);
+        static Data* deserialize(uintptr_t raw);
 };
 
 #endif
