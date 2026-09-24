@@ -15,10 +15,6 @@ if [ -f "$WORDPRESS_USER_PASSWORD_FILE" ]; then
     WORDPRESS_USER_PASSWORD=$(cat "$WORDPRESS_USER_PASSWORD_FILE")
 fi
 
-while ! mariadb-admin ping -h"$MYSQL_HOST" -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --silent; do
-    sleep 2
-done
-
 if [ ! -f "$WP_PATH/wp-config.php" ]; then
     echo "Configurazione automatica di WordPress con WP-CLI..."
 

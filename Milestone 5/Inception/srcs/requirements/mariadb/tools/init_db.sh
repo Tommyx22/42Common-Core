@@ -11,7 +11,7 @@ if [ -f "$MYSQL_PASSWORD_FILE" ]; then
     MYSQL_PASSWORD=$(cat "$MYSQL_PASSWORD_FILE")
 fi
 
-if [ ! -d "$DATA_DIR/mysql" ]; then
+if [ ! -f "$DATA_DIR/.inception_initialized" ]; then
     echo "[MariaDB] Prima esecuzione rilevata: Inizializzazione dati e configurazione credenziali..."
 
     mkdir -p /var/run/mysqld "$DATA_DIR"
@@ -32,6 +32,8 @@ GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO '${MYSQL_USER}'@'%';
 
 FLUSH PRIVILEGES;
 EOF
+
+    touch "$DATA_DIR/.inception_initialized"
 
     echo "[MariaDB] Inizializzazione completata con successo."
 else

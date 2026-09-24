@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /var/run/mysqld /var/lib/mysql && \
+    mkdir -p /var/log/mysql && \
     chown -R mysql:mysql /var/run/mysqld /var/lib/mysql && \
     chmod 755 /var/run/mysqld
 
