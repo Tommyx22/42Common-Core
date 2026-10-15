@@ -178,15 +178,15 @@ make
 This reset deletes persistent data and should only be used for a fresh installation or troubleshooting.
 
 
-## Password managment
+## Password management
 
-Create all password file:
+Create all the password files inside the `secrets/` directory:
 
-db_password.txt
-db_root_password.txt
-wp_admin_password.txt
-wp_user_password.txt
+- `db_password.txt`
+- `db_root_password.txt`
+- `wp_admin_password.txt`
+- `wp_user_password.txt`
 
-U can put any password u want inside those files
+You can put any password you want inside those files.
 
-Create an .env file using .env.example
+Create an `.env` file using `.env.example` as a template and fill it with your configuration.

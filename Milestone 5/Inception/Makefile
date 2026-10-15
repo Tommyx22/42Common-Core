@@ -2,7 +2,7 @@ COMPOSE_FILE = srcs/docker-compose.yml
 USER = tolanini
 DATA_DIR = /home/$(USER)/data
 
-.PHONY: all build up down clean fclean re status logs
+.PHONY: all build up down clean fclean re
 
 all: build up
 
