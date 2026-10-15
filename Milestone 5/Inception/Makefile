@@ -21,12 +21,6 @@ up:
 down:
 	docker compose -f $(COMPOSE_FILE) down
 
-status:
-	docker compose -f $(COMPOSE_FILE) ps
-
-logs:
-	docker compose -f $(COMPOSE_FILE) logs -f
-
 clean:
 	docker compose -f $(COMPOSE_FILE) down -v
 
